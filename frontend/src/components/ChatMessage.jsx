@@ -11,7 +11,7 @@ const ChatMessage = ({ message }) => {
       if (!paragraph.trim()) return <br key={i} />;
       return (
         <p key={i} className="mb-2 last:mb-0">
-          {paragraph.split('**').map((chunk, j) => 
+          {paragraph.split('**').map((chunk, j) =>
             j % 2 === 1 ? <strong key={j} className={isAI ? "text-slate-900 font-bold" : "text-white font-bold"}>{chunk}</strong> : chunk
           )}
         </p>
@@ -20,13 +20,13 @@ const ChatMessage = ({ message }) => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, x: isAI ? -20 : 20 }}
       animate={{ opacity: 1, x: 0 }}
       className={`flex w-full ${isAI ? "justify-start" : "justify-end"} mb-6`}
     >
       <div className={`flex gap-3 max-w-[75%] ${isAI ? 'flex-row' : 'flex-row-reverse'}`}>
-        
+
         {/* Avatar */}
         {isAI && (
           <div className="shrink-0 w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mt-auto mb-1 border border-slate-300">
@@ -35,11 +35,10 @@ const ChatMessage = ({ message }) => {
         )}
 
         {/* Bubble */}
-        <div className={`p-4 shadow-sm ${
-          isAI 
-            ? 'bg-slate-100 text-slate-900 rounded-2xl rounded-bl-md' 
+        <div className={`p-4 shadow-sm ${isAI
+            ? 'bg-slate-100 text-slate-900 rounded-2xl rounded-bl-md'
             : 'bg-blue-600 text-white rounded-2xl rounded-br-md ml-auto'
-        }`}>
+          }`}>
           <div className="leading-relaxed text-[0.95rem]">
             {formatText(message.content)}
           </div>
@@ -63,7 +62,7 @@ const ChatMessage = ({ message }) => {
                   </ul>
                 </div>
               )}
-              
+
               {message.metadata.plan && message.metadata.plan.length > 0 && (
                 <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
                   <div className="flex items-center gap-2 text-emerald-600 mb-3 font-semibold text-sm">

@@ -18,9 +18,17 @@ from database.queries import (
     update_chat_session_title,
 )
 from models.schemas import ChatRequest, ChatResponse
-from services.rag_service import rag
+from services.rag_service_runtime import rag
 
 router = APIRouter()
+
+
+def _normalise_user_id(user_id: object) -> Optional[str]:
+    """Return a clean user id string when available."""
+    if isinstance(user_id, str):
+        user_id = user_id.strip()
+        return user_id or None
+    return None
 
 
 # ── Main chat endpoint ──────────────────────────────────────────────────
@@ -32,7 +40,7 @@ async def chat(
 ):
     """RAG-powered legal chat endpoint. Persists messages if user + session provided."""
     try:
-        user_id = request.user_id or x_user_id
+        user_id = _normalise_user_id(request.user_id) or _normalise_user_id(x_user_id)
         session_id = request.session_id
 
         # Auto-create session if user is authenticated but no session
@@ -40,7 +48,7 @@ async def chat(
             try:
                 session = create_chat_session(user_id)
                 session_id = session.get("id")
-            except DatabaseOperationError:
+            except Exception:
                 pass
 
         # Save user message
@@ -52,7 +60,7 @@ async def chat(
                     role="user",
                     content=request.user_query,
                 )
-            except DatabaseOperationError:
+            except Exception:
                 pass
 
         # Get RAG response
@@ -77,13 +85,15 @@ async def chat(
                     title = request.user_query[:80]
                     try:
                         update_chat_session_title(session_id, user_id, title)
-                    except DatabaseOperationError:
+                    except Exception:
                         pass
-            except DatabaseOperationError:
+            except Exception:
                 pass
 
         return ChatResponse(**result, session_id=session_id)
     except Exception as exc:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=500,
             detail=f"Chat failed: {exc}",
@@ -97,11 +107,12 @@ async def list_sessions(
     x_user_id: Optional[str] = Header(None, alias="X-User-ID"),
 ):
     """List all chat sessions for a user."""
-    if not x_user_id:
+    user_id = _normalise_user_id(x_user_id)
+    if not user_id:
         raise HTTPException(status_code=401, detail="X-User-ID header is required.")
 
     try:
-        sessions = fetch_user_chat_sessions(x_user_id)
+        sessions = fetch_user_chat_sessions(user_id)
         return {"sessions": sessions, "count": len(sessions)}
     except DatabaseOperationError as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -113,11 +124,12 @@ async def get_messages(
     x_user_id: Optional[str] = Header(None, alias="X-User-ID"),
 ):
     """Get all messages in a chat session."""
-    if not x_user_id:
+    user_id = _normalise_user_id(x_user_id)
+    if not user_id:
         raise HTTPException(status_code=401, detail="X-User-ID header is required.")
 
     try:
-        messages = fetch_session_messages(session_id, x_user_id)
+        messages = fetch_session_messages(session_id, user_id)
         return {"messages": messages, "count": len(messages)}
     except DatabaseOperationError as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -129,11 +141,12 @@ async def remove_session(
     x_user_id: Optional[str] = Header(None, alias="X-User-ID"),
 ):
     """Delete a chat session and all its messages."""
-    if not x_user_id:
+    user_id = _normalise_user_id(x_user_id)
+    if not user_id:
         raise HTTPException(status_code=401, detail="X-User-ID header is required.")
 
     try:
-        deleted = delete_chat_session(session_id, x_user_id)
+        deleted = delete_chat_session(session_id, user_id)
         if not deleted:
             raise HTTPException(status_code=404, detail="Session not found.")
         return {"message": "Session deleted successfully."}

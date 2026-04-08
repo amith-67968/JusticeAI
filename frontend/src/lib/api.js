@@ -1,6 +1,34 @@
-const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-).replace(/\/$/, '');
+const normalizeBaseUrl = (value) => value.replace(/\/$/, '');
+
+const shouldUseDevProxy = (configuredBaseUrl) => {
+  if (!import.meta.env.DEV) {
+    return false;
+  }
+
+  if (!configuredBaseUrl) {
+    return true;
+  }
+
+  try {
+    const currentOrigin =
+      typeof window !== 'undefined'
+        ? window.location.origin
+        : 'http://localhost:5173';
+    const parsedUrl = new URL(configuredBaseUrl, currentOrigin);
+    const isLocalBackend = ['localhost', '127.0.0.1'].includes(parsedUrl.hostname);
+
+    return isLocalBackend && parsedUrl.origin !== currentOrigin;
+  } catch {
+    return false;
+  }
+};
+
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+const API_BASE_URL = shouldUseDevProxy(configuredApiBaseUrl)
+  ? '/api'
+  : normalizeBaseUrl(
+      configuredApiBaseUrl || (import.meta.env.DEV ? '/api' : 'http://localhost:8000')
+    );
 
 class ApiError extends Error {
   constructor(message, status, payload) {
