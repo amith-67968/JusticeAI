@@ -104,6 +104,8 @@ export const api = {
   analyzeCase: (user, payload) =>
     request('/analyze/', { method: 'POST', body: payload, user }),
   listDocuments: (user) => request('/documents/', { user }),
+  getDocumentPreviewUrl: (user, documentId) =>
+    request(`/documents/${documentId}/preview`, { user }),
   getDocumentDownloadUrl: (user, documentId) =>
     request(`/documents/${documentId}/download`, { user }),
   deleteDocument: (user, documentId) =>

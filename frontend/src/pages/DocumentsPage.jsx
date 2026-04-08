@@ -138,12 +138,21 @@ const DocumentsPage = () => {
     return matchesFilter && matchesSearch;
   });
 
-  const openDocument = async (documentId) => {
+  const previewDocument = async (documentId) => {
+    try {
+      const response = await api.getDocumentPreviewUrl(user, documentId);
+      window.open(response.preview_url, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to preview document.');
+    }
+  };
+
+  const downloadDocument = async (documentId) => {
     try {
       const response = await api.getDocumentDownloadUrl(user, documentId);
       window.open(response.download_url, '_blank', 'noopener,noreferrer');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to open document.');
+      setError(err instanceof Error ? err.message : 'Unable to download document.');
     }
   };
 
@@ -162,8 +171,8 @@ const DocumentsPage = () => {
   };
 
   return (
-    <div className="page-container flex flex-col h-screen overflow-y-auto">
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shrink-0">
+    <div className="page-container flex h-screen flex-col overflow-hidden">
+      <div className="sticky top-0 z-40 flex shrink-0 items-center justify-between border-b border-gray-200 bg-white/95 px-6 py-4 backdrop-blur">
         <div className="flex items-center gap-2">
           <div className="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm flex items-center justify-center border border-blue-200 shadow-sm font-semibold">
             AI
@@ -183,132 +192,136 @@ const DocumentsPage = () => {
         </div>
       </div>
 
-      <main className="flex-1 w-full max-w-[var(--max-w-app)] mx-auto px-6 lg:px-12 py-10">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="mb-4 p-2.5 rounded-full bg-white border border-slate-200 shadow-sm hover:shadow hover:bg-slate-50 transition-all text-slate-500 hover:text-slate-900 flex items-center justify-center"
-              title="Back to Dashboard"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Documents</h1>
-            <p className="text-lg text-text-secondary">
-              Review uploaded case files, download them, or remove anything you no longer need.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-wrap items-center gap-4"
-          >
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="text-text-tertiary" size={18} />
-              </div>
-              <input
-                type="text"
-                placeholder="Search files..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-full md:w-64 py-2.5"
-              />
-            </div>
-
-            <div className="relative">
-              <select
-                className="w-full md:w-auto px-4 py-3 border border-slate-300 bg-white text-text-primary text-[0.95rem] rounded-xl outline-none focus:ring-2 focus:ring-accent-primary/20 focus:border-accent-primary appearance-none pr-10 cursor-pointer"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+      <main className="flex-1 overflow-y-auto">
+        <div className="mx-auto flex w-full max-w-[var(--max-w-app)] flex-col px-6 py-10 lg:px-12">
+          <div className="sticky top-0 z-30 -mx-6 mb-10 border-b border-slate-200 bg-[rgba(248,250,252,0.96)] px-6 pb-6 pt-2 backdrop-blur lg:-mx-12 lg:px-12">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
               >
-                <option value="All">All Types</option>
-                <option value="PDF">PDFs</option>
-                <option value="Image">Images</option>
-                <option value="Text">Text files</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <Filter className="text-text-tertiary" size={16} />
-              </div>
-            </div>
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="mb-4 flex items-center justify-center rounded-full border border-slate-200 bg-white p-2.5 text-slate-500 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow"
+                  title="Back to Dashboard"
+                >
+                  <ArrowLeft size={20} />
+                </button>
+                <h1 className="mb-3 text-3xl font-bold tracking-tight md:text-4xl">Documents</h1>
+                <p className="max-w-2xl text-lg text-text-secondary">
+                  Review uploaded case files, download them, or remove anything you no longer need.
+                </p>
+              </motion.div>
 
-            <button
-              onClick={() => navigate('/analyzer')}
-              className="btn-primary flex items-center gap-2 py-2.5"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-wrap items-center gap-4"
+              >
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Search className="text-text-tertiary" size={18} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search files..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full py-2.5 pl-10 md:w-64"
+                  />
+                </div>
+
+                <div className="relative">
+                  <select
+                    className="w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-white px-4 py-3 pr-10 text-[0.95rem] text-text-primary outline-none focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20 md:w-auto"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                  >
+                    <option value="All">All Types</option>
+                    <option value="PDF">PDFs</option>
+                    <option value="Image">Images</option>
+                    <option value="Text">Text files</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <Filter className="text-text-tertiary" size={16} />
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => navigate('/analyzer')}
+                  className="btn-primary flex items-center gap-2 py-2.5"
+                >
+                  <PlusCircle size={18} /> Upload New
+                </button>
+              </motion.div>
+            </div>
+          </div>
+
+          {error && (
+            <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {loading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-16 text-center"
             >
-              <PlusCircle size={18} /> Upload New
-            </button>
-          </motion.div>
+              <h3 className="mb-2 text-xl font-bold text-slate-900">Loading documents...</h3>
+              <p className="max-w-sm text-text-secondary">
+                Pulling the latest files linked to your current session.
+              </p>
+            </motion.div>
+          ) : filteredDocs.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <AnimatePresence>
+                {filteredDocs.map((doc) => (
+                  <DocumentCard
+                    key={doc.id}
+                    doc={doc}
+                    onPreview={previewDocument}
+                    onDownload={downloadDocument}
+                    onDelete={handleDelete}
+                    isDeleting={deletingId === doc.id}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-16 text-center"
+            >
+              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-200 text-slate-500">
+                <FolderOpen size={40} />
+              </div>
+              <h3 className="mb-2 text-xl font-bold text-slate-900">No documents found</h3>
+              <p className="mb-6 max-w-sm text-text-secondary">
+                {searchQuery || filter !== 'All'
+                  ? "We couldn't find any documents matching your search criteria."
+                  : "You don't have any uploaded legal files yet. Start with the Case Analyzer to add one."}
+              </p>
+              {searchQuery || filter !== 'All' ? (
+                <button
+                  className="btn-secondary"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilter('All');
+                  }}
+                >
+                  Clear Filters
+                </button>
+              ) : (
+                <button className="btn-primary" onClick={() => navigate('/analyzer')}>
+                  Upload Your First Document
+                </button>
+              )}
+            </motion.div>
+          )}
         </div>
-
-        {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {loading ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center p-16 text-center border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50"
-          >
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Loading documents...</h3>
-            <p className="text-text-secondary max-w-sm">
-              Pulling the latest files linked to your current session.
-            </p>
-          </motion.div>
-        ) : filteredDocs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <AnimatePresence>
-              {filteredDocs.map((doc) => (
-                <DocumentCard
-                  key={doc.id}
-                  doc={doc}
-                  onPreview={openDocument}
-                  onDownload={openDocument}
-                  onDelete={handleDelete}
-                  isDeleting={deletingId === doc.id}
-                />
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center p-16 text-center border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50"
-          >
-            <div className="w-20 h-20 rounded-full bg-slate-200 flex items-center justify-center mb-6 text-slate-500">
-              <FolderOpen size={40} />
-            </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">No documents found</h3>
-            <p className="text-text-secondary max-w-sm mb-6">
-              {searchQuery || filter !== 'All'
-                ? "We couldn't find any documents matching your search criteria."
-                : "You don't have any uploaded legal files yet. Start with the Case Analyzer to add one."}
-            </p>
-            {searchQuery || filter !== 'All' ? (
-              <button
-                className="btn-secondary"
-                onClick={() => {
-                  setSearchQuery('');
-                  setFilter('All');
-                }}
-              >
-                Clear Filters
-              </button>
-            ) : (
-              <button className="btn-primary" onClick={() => navigate('/analyzer')}>
-                Upload Your First Document
-              </button>
-            )}
-          </motion.div>
-        )}
       </main>
     </div>
   );
