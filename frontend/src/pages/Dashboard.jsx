@@ -84,17 +84,23 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <main className="flex-1 flex flex-col items-center justify-center bg-gray-50 px-6 py-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-10">
-          {user?.name ? `Welcome, ${user.name}` : 'Dashboard'}
-        </h1>
+      <main className="flex-1 flex flex-col bg-gray-50 px-6">
+        
+        {/* Top Header Section - Strictly at the top middle */}
+        <div className="w-full pt-12 pb-4 flex justify-center shrink-0">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center">
+            {user?.name ? `Welcome, ${user.name}` : 'Dashboard'}
+          </h1>
+        </div>
 
-        <motion.div 
-          variants={containerVariants} 
-          initial="hidden" 
-          animate="show"
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl"
-        >
+        {/* Cards Section - Centered in remaining space */}
+        <div className="flex-1 flex items-center justify-center pb-20">
+          <motion.div 
+            variants={containerVariants} 
+            initial="hidden" 
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl"
+          >
           {features.map((feature) => (
             <motion.div
               key={feature.id}
@@ -132,6 +138,7 @@ const Dashboard = () => {
             </motion.div>
           ))}
         </motion.div>
+       </div>
       </main>
     </div>
   );
