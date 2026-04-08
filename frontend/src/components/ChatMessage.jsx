@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Bot, Scale, AlertCircle, BookOpenText } from 'lucide-react';
+import LawyerCards from './LawyerCards';
 
 const ChatMessage = ({ message }) => {
   const isAI = message.role === 'ai';
@@ -96,6 +97,14 @@ const ChatMessage = ({ message }) => {
                   </ul>
                 </div>
               )}
+
+              {/* Lawyer Recommendations */}
+              <LawyerCards
+                lawyers={message.metadata.lawyers || []}
+                linkedinUrl={message.metadata.linkedinUrl || ''}
+                caseTypes={message.metadata.caseTypes || []}
+                isLoading={message.metadata.lawyersLoading || false}
+              />
             </div>
           )}
         </div>

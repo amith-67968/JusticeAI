@@ -80,6 +80,8 @@ export const api = {
     request(`/documents/${documentId}/download`, { user }),
   deleteDocument: (user, documentId) =>
     request(`/documents/${documentId}`, { method: 'DELETE', user }),
+  recommendLawyers: (user, payload) =>
+    request('/lawyers/recommend', { method: 'POST', body: payload, user }),
 };
 
 export { ApiError };

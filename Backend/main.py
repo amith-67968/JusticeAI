@@ -81,12 +81,14 @@ from routes.upload import router as upload_router
 from routes.analyze import router as analyze_router
 from routes.documents import router as documents_router
 from routes.events import router as events_router
+from routes.lawyers import router as lawyers_router
 
 app.include_router(chat_router, prefix="/chat", tags=["Chat"])
 app.include_router(upload_router, prefix="/upload", tags=["Upload"])
 app.include_router(analyze_router, prefix="/analyze", tags=["Analysis"])
 app.include_router(documents_router, prefix="/documents", tags=["Documents"])
 app.include_router(events_router, prefix="/extract-events", tags=["Events"])
+app.include_router(lawyers_router, prefix="/lawyers", tags=["Lawyers"])
 
 
 # ── Health ───────────────────────────────────────────────────────────────

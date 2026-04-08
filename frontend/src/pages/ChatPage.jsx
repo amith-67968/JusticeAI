@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, LogOut, ArrowLeft, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,9 +23,55 @@ const buildAssistantMessage = (response) => {
       laws: response.relevant_laws || [],
       plan: response.next_steps || [],
       sources: response.sources || [],
+      // Lawyer fields — populated asynchronously
+      lawyers: [],
+      linkedinUrl: '',
+      caseTypes: [],
+      lawyersLoading: true,   // starts as loading
     },
   };
 };
+
+// ── Geolocation helper ─────────────────────────────────────────────────
+
+const getLocation = () => {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve({ lat: 0, lng: 0, city: '' });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        // Reverse-geocode to get city name
+        let city = '';
+        try {
+          const resp = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`
+          );
+          const data = await resp.json();
+          city =
+            data?.address?.city ||
+            data?.address?.town ||
+            data?.address?.state_district ||
+            data?.address?.state ||
+            '';
+        } catch {
+          // City lookup failed — still usable with lat/lng
+        }
+        resolve({ lat: latitude, lng: longitude, city });
+      },
+      () => {
+        // Permission denied or error
+        resolve({ lat: 0, lng: 0, city: '' });
+      },
+      { timeout: 8000, maximumAge: 300000 }
+    );
+  });
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 
 const ChatPage = () => {
   const navigate = useNavigate();
@@ -43,9 +89,64 @@ const ChatPage = () => {
   const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
 
+  // Cache location so we only prompt once
+  const locationRef = useRef(null);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  // Fetch lawyers in the background and patch the message
+  const fetchLawyers = useCallback(async (messageId, aiResponse) => {
+    try {
+      // Get location (cached after first call)
+      if (!locationRef.current) {
+        locationRef.current = await getLocation();
+      }
+      const loc = locationRef.current;
+
+      const lawyerData = await api.recommendLawyers(user, {
+        ai_response: aiResponse,
+        city: loc.city,
+        lat: loc.lat,
+        lng: loc.lng,
+      });
+
+      // Patch the specific message's metadata
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === messageId
+            ? {
+                ...msg,
+                metadata: {
+                  ...msg.metadata,
+                  lawyers: lawyerData.lawyers || [],
+                  linkedinUrl: lawyerData.linkedin_url || '',
+                  caseTypes: lawyerData.case_types || [],
+                  lawyersLoading: false,
+                },
+              }
+            : msg
+        )
+      );
+    } catch (err) {
+      console.warn('[ChatPage] Lawyer recommendation failed:', err);
+      // Stop loading even on failure
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === messageId
+            ? {
+                ...msg,
+                metadata: {
+                  ...msg.metadata,
+                  lawyersLoading: false,
+                },
+              }
+            : msg
+        )
+      );
+    }
+  }, [user]);
 
   const handleSend = async (event) => {
     event?.preventDefault();
@@ -76,10 +177,13 @@ const ChatPage = () => {
         setSessionId(response.session_id);
       }
 
-      setMessages((currentMessages) => [
-        ...currentMessages,
-        buildAssistantMessage(response),
-      ]);
+      const assistantMsg = buildAssistantMessage(response);
+
+      setMessages((currentMessages) => [...currentMessages, assistantMsg]);
+
+      // Fire-and-forget: fetch lawyers asynchronously
+      fetchLawyers(assistantMsg.id, response);
+
     } catch (err) {
       setMessages((currentMessages) => [
         ...currentMessages,
