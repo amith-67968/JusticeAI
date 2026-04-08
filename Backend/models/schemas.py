@@ -164,6 +164,33 @@ class EventExtractionResponse(BaseModel):
     events: list[EventItem] = []
 
 
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Lawyer Recommendations
+# ═══════════════════════════════════════════════════════════════════════════
+
+class LawyerInfo(BaseModel):
+    name: str
+    rating: float = 0.0
+    address: str = ""
+    distance: str = ""
+    maps_url: str = ""
+    phone: str = ""
+
+
+class LawyerRecommendRequest(BaseModel):
+    ai_response: dict
+    city: str = ""
+    lat: float = 0.0
+    lng: float = 0.0
+
+
+class LawyerRecommendResponse(BaseModel):
+    lawyers: list[LawyerInfo] = []
+    linkedin_url: str = ""
+    case_types: list[str] = []
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Health
 # ═══════════════════════════════════════════════════════════════════════════
