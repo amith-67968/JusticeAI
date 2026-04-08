@@ -193,47 +193,54 @@ const DocumentsPage = () => {
       </div>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-[var(--max-w-app)] flex-col px-6 py-10 lg:px-12">
-          <div className="sticky top-0 z-30 -mx-6 mb-10 border-b border-slate-200 bg-[rgba(248,250,252,0.96)] px-6 pb-6 pt-2 backdrop-blur lg:-mx-12 lg:px-12">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mx-auto flex w-full max-w-[var(--max-w-app)] flex-col px-6 pb-10 pt-0 lg:px-12">
+          <div className="sticky top-0 z-30 -mx-6 mb-6 border-b border-slate-200 bg-[rgba(248,250,252,0.96)] px-6 py-3 backdrop-blur lg:-mx-12 lg:px-12">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
+                className="min-w-0"
               >
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="mb-4 flex items-center justify-center rounded-full border border-slate-200 bg-white p-2.5 text-slate-500 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow"
-                  title="Back to Dashboard"
-                >
-                  <ArrowLeft size={20} />
-                </button>
-                <h1 className="mb-3 text-3xl font-bold tracking-tight md:text-4xl">Documents</h1>
-                <p className="max-w-2xl text-lg text-text-secondary">
-                  Review uploaded case files, download them, or remove anything you no longer need.
-                </p>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => navigate(-1)}
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white !p-0 text-slate-700 transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-sm"
+                    title="Go back"
+                  >
+                    <ArrowLeft size={18} strokeWidth={2.25} />
+                  </button>
+                  <div className="min-w-0">
+                    <h1 className="text-[22px] font-semibold leading-tight text-slate-900 sm:text-2xl">
+                      Documents
+                    </h1>
+                    <p className="mt-0.5 text-sm text-slate-500">
+                      Review uploaded case files, download them, or remove anything you no longer need.
+                    </p>
+                  </div>
+                </div>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-wrap items-center gap-4"
+                className="grid w-full grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_auto] lg:w-auto lg:grid-cols-[minmax(220px,260px)_auto_auto] lg:items-center"
               >
-                <div className="relative">
+                <div className="relative sm:col-span-2 lg:col-span-1">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <Search className="text-text-tertiary" size={18} />
+                    <Search className="text-text-tertiary" size={16} />
                   </div>
                   <input
                     type="text"
                     placeholder="Search files..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full py-2.5 pl-10 md:w-64"
+                    className="h-9 w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm text-text-primary transition-all hover:border-slate-400 focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20"
                   />
                 </div>
 
-                <div className="relative">
+                <div className="relative shrink-0">
                   <select
-                    className="w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-white px-4 py-3 pr-10 text-[0.95rem] text-text-primary outline-none focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20 md:w-auto"
+                    className="h-9 min-w-[132px] cursor-pointer appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-text-primary outline-none transition-all hover:bg-slate-50 hover:shadow-sm focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                   >
@@ -249,9 +256,9 @@ const DocumentsPage = () => {
 
                 <button
                   onClick={() => navigate('/analyzer')}
-                  className="btn-primary flex items-center gap-2 py-2.5"
+                  className="flex h-9 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-accent-primary px-3.5 text-sm font-medium text-white shadow-sm transition-all hover:brightness-105 hover:shadow-md"
                 >
-                  <PlusCircle size={18} /> Upload New
+                  <PlusCircle size={16} /> Upload New
                 </button>
               </motion.div>
             </div>
