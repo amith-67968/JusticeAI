@@ -103,9 +103,6 @@ const CaseAnalyzerPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col pt-6">
       <div className="px-6 mb-6 flex items-start justify-between gap-4">
         <div>
-          <div className="text-sm text-gray-500 mb-4 font-medium tracking-wide">
-            Dashboard / Case Analyzer
-          </div>
           <div className="flex items-start gap-4">
             <button
               onClick={() => navigate('/dashboard')}
