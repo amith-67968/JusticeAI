@@ -1,0 +1,31 @@
+# Core
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+
+# LLM & RAG
+langchain
+langchain-community
+langchain-text-splitters
+groq
+
+# Vector Store
+faiss-cpu
+
+# Document Processing
+PyMuPDF
+Pillow
+pytesseract
+
+# ML / Classification
+transformers
+torch
+sentencepiece
+sentence-transformers
+
+# Utilities
+python-dateutil
+aiofiles
+python-dotenv
+supabase
