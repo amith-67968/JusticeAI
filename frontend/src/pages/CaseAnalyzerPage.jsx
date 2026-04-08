@@ -118,7 +118,7 @@ const CaseAnalyzerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col pt-6">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex flex-col pt-6">
       <div className="px-6 mb-6 flex items-start gap-4">
         <div>
           <div className="flex items-start gap-4">
@@ -155,7 +155,7 @@ const CaseAnalyzerPage = () => {
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`w-full min-h-[340px] md:min-h-[380px] border-2 border-dashed rounded-2xl px-10 py-14 md:px-14 md:py-16 flex flex-col items-center justify-center cursor-pointer transition-colors ${
+                  className={`w-full min-h-85 md:min-h-95 border-2 border-dashed rounded-2xl px-10 py-14 md:px-14 md:py-16 flex flex-col items-center justify-center cursor-pointer transition-colors ${
                     isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400 bg-gray-50/50'
                   }`}
                 >
@@ -180,7 +180,7 @@ const CaseAnalyzerPage = () => {
                   />
                 </div>
               ) : (
-                <div className="w-full min-h-[300px] border-2 border-gray-100 rounded-2xl p-10 md:p-12 flex flex-col items-center justify-center bg-gray-50/30">
+                <div className="w-full min-h-75 border-2 border-gray-100 rounded-2xl p-10 md:p-12 flex flex-col items-center justify-center bg-gray-50/30">
                   <div className="bg-green-100 text-green-600 rounded-full p-5 mb-5">
                     <FileText size={40} />
                   </div>

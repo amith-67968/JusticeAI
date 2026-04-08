@@ -193,7 +193,7 @@ const DocumentsPage = () => {
       </div>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-[var(--max-w-app)] flex-col px-6 pb-10 pt-0 lg:px-12">
+        <div className="mx-auto flex w-full max-w-(--max-w-app) flex-col px-6 pb-10 pt-0 lg:px-12">
           <div className="sticky top-0 z-30 -mx-6 mb-6 border-b border-slate-200 bg-[rgba(248,250,252,0.96)] px-6 py-3 backdrop-blur lg:-mx-12 lg:px-12">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <motion.div
@@ -204,7 +204,7 @@ const DocumentsPage = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => navigate(-1)}
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white !p-0 text-slate-700 transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-sm"
+                    className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-sm"
                     title="Go back"
                   >
                     <ArrowLeft size={18} strokeWidth={2.25} />
@@ -240,7 +240,7 @@ const DocumentsPage = () => {
 
                 <div className="relative shrink-0">
                   <select
-                    className="h-9 min-w-[132px] cursor-pointer appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-text-primary outline-none transition-all hover:bg-slate-50 hover:shadow-sm focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20"
+                    className="h-9 min-w-33 cursor-pointer appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-text-primary outline-none transition-all hover:bg-slate-50 hover:shadow-sm focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                   >

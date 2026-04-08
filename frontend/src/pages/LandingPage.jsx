@@ -85,14 +85,14 @@ export default function LandingPage() {
       </video>
 
       {/* Premium Gradient Overlay - Darker on the right where the UI sits */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/90 z-0"></div>
+      <div className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-black/40 to-black/90"></div>
 
       {/* Fixed Layout Wrap */}
       <div className="absolute inset-0 flex items-center justify-center md:justify-end px-6 md:px-10 z-10 pointer-events-none">
         
         {/* Perspective Flip Container - Enlarged for new nested Auth flows */}
-        <div className="perspective w-full max-w-lg min-h-[560px] pointer-events-auto">
-          <div className={`relative w-full h-full min-h-[560px] transition-transform duration-700 transform-style ${isFlipped ? "rotate-y-180" : ""}`}>
+        <div className="perspective w-full max-w-lg min-h-140 pointer-events-auto">
+          <div className={`relative h-full w-full min-h-140 transition-transform duration-700 transform-style ${isFlipped ? "rotate-y-180" : ""}`}>
             
             {/* FRONT (Hero) */}
             <div className="absolute inset-0 backface-hidden w-full h-full">
@@ -129,7 +129,7 @@ export default function LandingPage() {
             {/* BACK (Auth Container) */}
             <div className="absolute inset-0 w-full h-full rotate-y-180 backface-hidden flex">
               {/* Darker premium glass block for the backside too, keeping unified contrast */}
-              <div className="bg-slate-900/40 backdrop-blur-xl border border-white/20 rounded-2xl p-8 md:p-10 w-full min-h-[560px] h-full shadow-2xl relative flex flex-col justify-center overflow-hidden">
+              <div className="relative flex h-full w-full min-h-140 flex-col justify-center overflow-hidden rounded-2xl border border-white/20 bg-slate-900/40 p-8 shadow-2xl backdrop-blur-xl md:p-10">
                 
                 <button
                   onClick={() => setIsFlipped(false)}
@@ -139,7 +139,7 @@ export default function LandingPage() {
                   Back
                 </button>
 
-                <div className="w-full mt-10 relative h-[420px]">
+                <div className="relative mt-10 h-105 w-full">
                   <AnimatePresence mode="wait">
                     
                     {/* LOGIN FORM */}

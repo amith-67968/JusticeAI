@@ -53,7 +53,7 @@ const Documents = () => {
         </div>
       </div>
 
-      <main className="flex-1 w-full max-w-[var(--max-w-app)] mx-auto px-6 lg:px-12 py-10">
+      <main className="flex-1 w-full max-w-(--max-w-app) mx-auto px-6 lg:px-12 py-10">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
           <motion.div 
             initial={{ opacity: 0, y: -10 }} 

@@ -18,9 +18,9 @@ const Navbar = () => {
     <motion.nav 
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="sticky top-0 z-50 w-full glass-panel border-b-0 rounded-none h-[72px] flex items-center px-6 lg:px-12"
+      className="glass-panel sticky top-0 z-50 flex h-18 w-full items-center rounded-none border-b-0 px-6 lg:px-12"
     >
-      <div className="flex justify-between items-center w-full max-w-[var(--max-w-app)] mx-auto">
+      <div className="mx-auto flex w-full max-w-(--max-w-app) items-center justify-between">
         <NavLink to="/dashboard" className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl bg-accent-primary/10 flex items-center justify-center border border-accent-primary/20 group-hover:bg-accent-primary/20 transition-colors">
             <Scale className="text-accent-primary" size={24} />
