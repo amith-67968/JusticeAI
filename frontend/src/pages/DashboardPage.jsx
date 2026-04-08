@@ -5,7 +5,7 @@ import { Briefcase, UploadCloud, FolderOpen, ArrowRight, LogOut, User } from 'lu
 import { useAuth } from '../context/AuthContext';
 import GlowCard from '../components/ui/spotlight-card';
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -14,55 +14,57 @@ const Dashboard = () => {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
-      }
-    }
+        staggerChildren: 0.15,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 300, damping: 24 },
+    },
   };
 
   const features = [
     {
       id: 'chat',
       title: 'AI Legal Chat',
-      description: 'Chat with our advanced AI to analyze precedents, draft documents, and get instant legal insights tailored to your case.',
+      description: 'Talk through a legal issue, ask about relevant sections, and get structured next steps from the backend assistant.',
       icon: <Briefcase size={32} className="text-accent-primary" />,
-      path: '/chat'
+      path: '/chat',
     },
     {
       id: 'analyzer',
       title: 'Case Analyzer',
-      description: 'Upload case files or photos of documents. The AI instantly extracts key entities, summaries, and potential arguments.',
+      description: 'Upload a document and run the real extraction, classification, and case-analysis pipeline.',
       icon: <UploadCloud size={32} className="text-accent-primary" />,
-      path: '/analyzer'
+      path: '/analyzer',
     },
     {
       id: 'documents',
       title: 'Documents',
-      description: 'A secure, organized repository for all your case files, evidence, and generated drafts.',
+      description: 'Browse your uploaded files, open them again, or clean up the documents linked to this session.',
       icon: <FolderOpen size={32} className="text-accent-primary" />,
-      path: '/documents'
-    }
+      path: '/documents',
+    },
   ];
 
   return (
     <div className="page-container flex flex-col h-screen">
-      {/* Minimal App Header */}
       <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shrink-0">
         <div className="flex items-center gap-2">
-          <div className="bg-blue-100 text-blue-600 p-2 rounded-lg text-lg flex items-center justify-center border border-blue-200 shadow-sm">
-            ⚖️
+          <div className="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm font-semibold flex items-center justify-center border border-blue-200 shadow-sm">
+            AI
           </div>
           <h1 className="text-xl font-bold text-gray-900 tracking-tight">
             JusticeAI
           </h1>
         </div>
-        {/* Right: User Section */}
+
         <div className="flex items-center gap-3">
-          {/* Profile */}
           <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
             <span className="bg-blue-100 text-blue-600 p-1.5 rounded-full flex items-center justify-center">
               <User size={16} />
@@ -70,7 +72,6 @@ const Dashboard = () => {
             <span className="text-sm font-medium text-gray-900">{user?.name || 'Profile'}</span>
           </button>
 
-          {/* Logout */}
           <button
             onClick={() => {
               logout();
@@ -85,13 +86,13 @@ const Dashboard = () => {
       </div>
 
       <main className="flex-1 flex flex-col items-center justify-center bg-gray-50 px-6 py-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-10">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-10 text-center">
           {user?.name ? `Welcome, ${user.name}` : 'Dashboard'}
         </h1>
 
-        <motion.div 
-          variants={containerVariants} 
-          initial="hidden" 
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
           animate="show"
           className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl"
         >
@@ -99,14 +100,14 @@ const Dashboard = () => {
             <motion.div
               key={feature.id}
               variants={itemVariants}
-              whileHover={{ 
-                y: -8, 
+              whileHover={{
+                y: -8,
                 scale: 1.02,
               }}
               whileTap={{ scale: 0.98 }}
               className="h-full"
             >
-              <GlowCard 
+              <GlowCard
                 onClick={() => navigate(feature.path)}
                 glowColor="black"
                 customSize={true}
@@ -115,7 +116,7 @@ const Dashboard = () => {
                 <div className="w-16 h-16 rounded-2xl bg-accent-primary/10 flex items-center justify-center mb-6 group-hover:bg-accent-primary/20 transition-colors border border-accent-primary/20">
                   {feature.icon}
                 </div>
-                
+
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-accent-primary transition-colors">
                     {feature.title}
@@ -126,7 +127,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="mt-8 flex items-center text-sm font-semibold text-accent-primary group-hover:text-accent-hover">
-                  Get Started <ArrowRight size={16} className="ml-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  Open Feature <ArrowRight size={16} className="ml-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </div>
               </GlowCard>
             </motion.div>
@@ -137,4 +138,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

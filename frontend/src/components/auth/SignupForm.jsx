@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Loader2, ArrowRight } from 'lucide-react';
 
-const SignupForm = ({ onSwitch }) => {
+const SignupForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
