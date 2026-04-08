@@ -1,0 +1,85 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    --max-w-app: 1200px;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    @apply bg-bg-primary text-text-primary font-sans w-full h-screen overflow-hidden antialiased;
+  }
+}
+
+@layer components {
+  /* Forms */
+  input {
+    @apply w-full px-4 py-3.5 rounded-xl border border-slate-300 bg-bg-secondary text-text-primary text-[0.95rem] outline-none transition-all duration-200;
+  }
+  input:focus {
+    @apply border-accent-primary ring-2 ring-accent-primary/20;
+  }
+
+  /* Buttons */
+  button {
+    @apply cursor-pointer font-medium rounded-full transition-all duration-200 px-6 py-3 text-[0.95rem] disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  
+  .btn-primary {
+    @apply bg-accent-primary text-white shadow-md hover:-translate-y-px hover:shadow-lg hover:shadow-accent-primary/20 hover:bg-accent-hover;
+  }
+  
+  .btn-secondary {
+    @apply bg-bg-secondary text-text-primary border border-slate-200 shadow-sm hover:bg-bg-tertiary;
+  }
+
+  /* Glass Effects */
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-md border border-slate-200 rounded-2xl shadow-sm;
+  }
+
+  /* Structural */
+  .page-container {
+    @apply w-full h-screen overflow-y-auto relative;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 3D Flip Utilities */
+@layer utilities {
+  .perspective {
+    perspective: 1200px;
+  }
+  
+  .transform-style {
+    transform-style: preserve-3d;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
