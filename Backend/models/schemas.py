@@ -92,9 +92,12 @@ class StoredDocument(BaseModel):
     user_id: Optional[str] = None
     filename: str = ""
     file_path: str = ""
+    file_type: str = ""
+    file_size_bytes: int = 0
     text: str = ""
     case_type: str = ""
     strength: str = ""
+    structured_data: dict = {}
     created_at: Optional[datetime] = None
 
 
