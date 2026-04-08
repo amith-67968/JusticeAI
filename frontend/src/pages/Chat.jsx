@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, ArrowLeft, Mic } from 'lucide-react';
+import { Send, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 
@@ -15,7 +15,6 @@ const Chat = () => {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -49,10 +48,6 @@ const Chat = () => {
       setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
     }, 2000);
-  };
-
-  const toggleListen = () => {
-    setIsListening(!isListening);
   };
 
   return (
@@ -117,17 +112,6 @@ const Chat = () => {
             className="flex-1 border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-slate-900 bg-white shadow-sm"
           />
           
-          <button 
-            type="button"
-            onClick={toggleListen}
-            className={`w-12 h-12 flex items-center justify-center rounded-xl transition-colors shrink-0 shadow-sm ${
-              isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-slate-600 hover:bg-gray-200'
-            }`}
-            title="Voice Dictation"
-          >
-            <Mic size={20} />
-          </button>
-
           <button 
             onClick={handleSend}
             disabled={!input.trim() || isTyping}
