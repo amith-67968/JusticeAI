@@ -117,15 +117,15 @@ const ChatPage = () => {
         prev.map((msg) =>
           msg.id === messageId
             ? {
-                ...msg,
-                metadata: {
-                  ...msg.metadata,
-                  lawyers: lawyerData.lawyers || [],
-                  linkedinUrl: lawyerData.linkedin_url || '',
-                  caseTypes: lawyerData.case_types || [],
-                  lawyersLoading: false,
-                },
-              }
+              ...msg,
+              metadata: {
+                ...msg.metadata,
+                lawyers: lawyerData.lawyers || [],
+                linkedinUrl: lawyerData.linkedin_url || '',
+                caseTypes: lawyerData.case_types || [],
+                lawyersLoading: false,
+              },
+            }
             : msg
         )
       );
@@ -136,12 +136,12 @@ const ChatPage = () => {
         prev.map((msg) =>
           msg.id === messageId
             ? {
-                ...msg,
-                metadata: {
-                  ...msg.metadata,
-                  lawyersLoading: false,
-                },
-              }
+              ...msg,
+              metadata: {
+                ...msg.metadata,
+                lawyersLoading: false,
+              },
+            }
             : msg
         )
       );
@@ -275,9 +275,8 @@ const ChatPage = () => {
           <button
             type="button"
             onClick={() => setIsListening((current) => !current)}
-            className={`w-12 h-12 flex items-center justify-center rounded-xl transition-colors shrink-0 shadow-sm ${
-              isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-slate-600 hover:bg-gray-200'
-            }`}
+            className={`w-12 h-12 flex items-center justify-center rounded-xl transition-colors shrink-0 shadow-sm ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-slate-600 hover:bg-gray-200'
+              }`}
             title="Voice Dictation"
           >
             <Mic size={20} />

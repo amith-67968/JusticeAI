@@ -43,7 +43,7 @@ async def lifespan(app: FastAPI):
 
     # 3. RAG vector store
     try:
-        from services.rag_service import rag
+        from services.rag_service_runtime import rag
 
         await loop.run_in_executor(None, rag.initialize)
         print("[startup] RAG vector store initialised")
