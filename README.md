@@ -117,7 +117,7 @@ JusticeAI is a **full-stack AI-powered legal assistance platform** focused on **
 - **Python 3.12+** — backend runtime
 - **Node.js 18+** and **npm** — frontend tooling
 - [Groq API Key](https://console.groq.com) (free tier available)
-- [Supabase Project](https://supabase.com) (for document storage)
+- [Supabase Project](https://supabase.com) (recommended for production document storage)
 - Tesseract OCR *(optional, for scanned PDFs/images)*
 
 ---
@@ -158,6 +158,8 @@ pip install -r requirements.txt
 GROQ_API_KEY=your_groq_api_key_here
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+GOOGLE_PLACES_API_KEY=
+DEBUG=true
 ```
 
 **Start the server:**
@@ -168,6 +170,7 @@ python main.py
 
 The API will be available at `http://localhost:8000`
 Swagger docs at `http://localhost:8000/docs`
+Health check at `http://localhost:8000/health`
 
 ---
 
@@ -203,6 +206,42 @@ python test_api.py
 
 ---
 
+## Deployment
+
+### Frontend on Vercel
+
+This repo includes `frontend/vercel.json` so React Router routes work correctly on refresh in production.
+
+1. Import the repository into Vercel.
+2. Set the **Root Directory** to `frontend`.
+3. Use the Vite defaults:
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Add the environment variable `VITE_API_BASE_URL=https://your-render-service.onrender.com`.
+5. Deploy the frontend.
+
+### Backend on Render
+
+This repo includes `render.yaml` and `Backend/.python-version` for Render deployment.
+
+1. Push the repository to GitHub, GitLab, or Bitbucket.
+2. In Render, create a new **Blueprint** or **Web Service** from the repo.
+3. Use these backend settings:
+   - Root Directory: `Backend`
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - Health Check Path: `/health`
+4. Add these Render environment variables:
+   - `GROQ_API_KEY`
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `GOOGLE_PLACES_API_KEY` *(optional)*
+5. Deploy and verify `https://your-render-service.onrender.com/health`.
+
+Important: the backend can fall back to local storage when Supabase is missing, but that fallback is not suitable for long-term production storage on Render. Use Supabase in production.
+
+---
+
 ## 📡 API Endpoints
 
 | Method | Endpoint | Description |
@@ -212,6 +251,10 @@ python test_api.py
 | `POST` | `/upload/` | Upload & process document |
 | `POST` | `/analyze/` | Analyze case materials |
 | `GET` | `/documents/` | List stored documents |
+| `GET` | `/documents/{id}/preview` | Generate preview URL |
+| `GET` | `/documents/{id}/download` | Generate download URL |
+| `DELETE` | `/documents/{id}` | Delete a stored document |
+| `POST` | `/lawyers/recommend` | Recommend nearby lawyers |
 | `POST` | `/extract-events/` | Extract dates & events |
 
 See [`sample_requests.json`](Backend/sample_requests.json) for detailed request/response examples.
@@ -296,6 +339,12 @@ JusticeAI/
 ```
 
 ---
+
+Deployment-specific files in this repo:
+
+- `render.yaml`
+- `Backend/.python-version`
+- `frontend/vercel.json`
 
 ## 🧠 Tech Stack
 
