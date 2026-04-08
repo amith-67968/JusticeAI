@@ -340,9 +340,12 @@ async def save_user_document(
             user_id=user_id,
             filename=filename,
             file_path=file_path,
+            file_type=row.get("file_type", ext.lstrip(".")),
+            file_size_bytes=row.get("file_size_bytes", len(file_bytes)),
             text=row.get("text", raw_text),
             case_type=row.get("case_type", case_type),
             strength=row.get("strength", strength),
+            structured_data=row.get("structured_data", structured_data or {}),
             created_at=row.get("created_at", datetime.now(timezone.utc)),
         )
     except Exception as exc:
@@ -362,9 +365,12 @@ async def save_classified_document(
         )
         return StoredDocument(
             id=row.get("id"),
+            file_type=row.get("file_type", ""),
+            file_size_bytes=row.get("file_size_bytes", 0),
             text=row.get("text", text),
             case_type=row.get("case_type", case_type),
             strength=row.get("strength", strength),
+            structured_data=row.get("structured_data", {}),
             created_at=row.get("created_at", datetime.now(timezone.utc)),
         )
     except Exception as exc:
@@ -391,9 +397,12 @@ async def fetch_all_stored_documents(
                 user_id=r.get("user_id", ""),
                 filename=r.get("filename", ""),
                 file_path=r.get("file_path", ""),
+                file_type=r.get("file_type", ""),
+                file_size_bytes=r.get("file_size_bytes", 0),
                 text=r.get("text", ""),
                 case_type=r.get("case_type", ""),
                 strength=r.get("strength", ""),
+                structured_data=r.get("structured_data", {}),
                 created_at=r.get("created_at", datetime.now(timezone.utc)),
             )
             for r in rows
