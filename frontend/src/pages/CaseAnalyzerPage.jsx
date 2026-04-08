@@ -14,6 +14,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 
+const NON_LEGAL_FILE_ERROR =
+  'This file does not appear to be related to law. Please upload a legal or law-related document to continue.';
+
 const CaseAnalyzerPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -69,7 +72,23 @@ const CaseAnalyzerPage = () => {
       setUploadResult(uploadedDocument);
 
       if (!uploadedDocument.is_legal_document) {
+        const uploadMessage = typeof uploadedDocument.message === 'string'
+          ? uploadedDocument.message.trim()
+          : '';
+
+        setFile(null);
+        setUploadResult(null);
         setAnalysisResult(null);
+        setError(
+          uploadMessage
+            ? `${uploadMessage} Only law-related files can be analyzed here.`
+            : NON_LEGAL_FILE_ERROR
+        );
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+
         return;
       }
 
@@ -127,7 +146,7 @@ const CaseAnalyzerPage = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-              className="w-full max-w-2xl bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 flex flex-col items-center text-center"
+              className="w-full max-w-4xl bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-300 px-8 py-10 md:px-12 md:py-12 flex flex-col items-center text-center"
             >
               {!file ? (
                 <div
@@ -136,15 +155,22 @@ const CaseAnalyzerPage = () => {
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`w-full border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center cursor-pointer transition-colors ${
+                  className={`w-full min-h-[340px] md:min-h-[380px] border-2 border-dashed rounded-2xl px-10 py-14 md:px-14 md:py-16 flex flex-col items-center justify-center cursor-pointer transition-colors ${
                     isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400 bg-gray-50/50'
                   }`}
                 >
-                  <div className="bg-blue-100 text-blue-600 rounded-full p-4 mb-4">
-                    <UploadCloud size={32} />
+                  <div className="bg-blue-100 text-blue-600 rounded-full p-5 mb-5">
+                    <UploadCloud size={40} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Click or drag file to this area to upload</h3>
-                  <p className="text-sm text-gray-500 mt-1">Supports PDF, TXT, and images up to 20 MB.</p>
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                    Click or drag file to this area to upload
+                  </h3>
+                  <p className="text-base text-gray-500 mt-1">
+                    Supports PDF, TXT, and images up to 20 MB.
+                  </p>
+                  <p className="text-sm text-gray-400 mt-3">
+                    Only legal or law-related documents can be analyzed.
+                  </p>
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -154,12 +180,12 @@ const CaseAnalyzerPage = () => {
                   />
                 </div>
               ) : (
-                <div className="w-full border-2 border-gray-100 rounded-xl p-10 flex flex-col items-center justify-center bg-gray-50/30">
-                  <div className="bg-green-100 text-green-600 rounded-full p-4 mb-4">
-                    <FileText size={32} />
+                <div className="w-full min-h-[300px] border-2 border-gray-100 rounded-2xl p-10 md:p-12 flex flex-col items-center justify-center bg-gray-50/30">
+                  <div className="bg-green-100 text-green-600 rounded-full p-5 mb-5">
+                    <FileText size={40} />
                   </div>
-                  <h3 className="text-xl text-gray-800 font-medium mb-1 truncate max-w-sm">{file.name}</h3>
-                  <div className="flex items-center gap-1.5 text-green-500 text-sm font-medium">
+                  <h3 className="text-2xl text-gray-800 font-medium mb-2 truncate max-w-2xl">{file.name}</h3>
+                  <div className="flex items-center gap-1.5 text-green-500 text-base font-medium">
                     <CheckCircle size={16} /> Ready for analysis
                   </div>
                   <button
@@ -172,8 +198,11 @@ const CaseAnalyzerPage = () => {
               )}
 
               {error && (
-                <div className="mt-6 w-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  {error}
+                <div className="mt-6 w-full rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-left text-sm text-red-700">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0" />
+                    <span>{error}</span>
+                  </div>
                 </div>
               )}
 
@@ -182,7 +211,7 @@ const CaseAnalyzerPage = () => {
                 whileTap={file ? { scale: 0.98 } : {}}
                 onClick={handleAnalyze}
                 disabled={!file}
-                className={`mt-6 w-full py-3 rounded-xl font-medium transition-all shadow-md ${
+                className={`mt-8 w-full py-4 rounded-2xl text-lg font-medium transition-all shadow-md ${
                   file
                     ? 'bg-gray-900 text-white hover:bg-gray-800'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed shadow-none'
@@ -202,27 +231,6 @@ const CaseAnalyzerPage = () => {
               <Loader2 size={48} className="text-gray-900 animate-spin mb-6" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Document...</h2>
               <p className="text-gray-500">Uploading, extracting entities, and running case analysis.</p>
-            </motion.div>
-          ) : uploadResult && !uploadResult.is_legal_document ? (
-            <motion.div
-              key="rejected-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8"
-            >
-              <div className="flex items-center gap-3 text-amber-600 mb-4">
-                <AlertTriangle size={26} />
-                <h2 className="text-2xl font-bold text-slate-900">Not recognized as a legal document</h2>
-              </div>
-              <p className="text-slate-600 leading-relaxed">
-                {uploadResult.message}
-              </p>
-              <button
-                onClick={resetAnalyzer}
-                className="mt-8 btn-primary"
-              >
-                Try Another Document
-              </button>
             </motion.div>
           ) : uploadResult && !analysisResult ? (
             <motion.div
