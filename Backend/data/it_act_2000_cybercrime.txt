@@ -1,0 +1,83 @@
+INFORMATION TECHNOLOGY ACT, 2000 — CYBER CRIME PROVISIONS
+============================================================
+
+The Information Technology Act, 2000 (IT Act) is India's primary legislation governing cyber crimes, electronic commerce, and digital signatures. It was amended significantly in 2008.
+
+KEY SECTIONS
+------------
+
+Section 43 — Damage to Computer, Computer System, etc.:
+If any person without permission accesses, downloads, introduces a virus, disrupts, denies access, or damages any computer system, they shall be liable to pay damages by way of compensation up to Rs. 5 crores to the affected person.
+
+Section 65 — Tampering with Computer Source Documents:
+Whoever knowingly or intentionally conceals, destroys, or alters any computer source code used for a computer, computer programme, or computer system shall be punished with imprisonment up to 3 years, or with fine up to Rs. 2 lakhs, or with both.
+
+Section 66 — Computer Related Offences (Hacking):
+If any person dishonestly or fraudulently does any act referred to in Section 43, they shall be punished with imprisonment up to 3 years or with fine up to Rs. 5 lakhs or with both. This is the main "hacking" provision.
+
+Section 66A — Sending Offensive Messages (STRUCK DOWN):
+This section was struck down by the Supreme Court of India in Shreya Singhal v. Union of India (2015) as unconstitutional for violating Article 19(1)(a) — freedom of speech and expression.
+
+Section 66B — Punishment for Dishonestly Receiving Stolen Computer Resource:
+Imprisonment up to 3 years, or fine up to Rs. 1 lakh, or both.
+
+Section 66C — Punishment for Identity Theft:
+Whoever fraudulently or dishonestly makes use of the electronic signature, password or any other unique identification feature of any other person shall be punished with imprisonment up to 3 years and fine up to Rs. 1 lakh.
+
+Section 66D — Punishment for Cheating by Personation Using Computer Resource:
+Whoever by means of any communication device or computer resource cheats by personation shall be punished with imprisonment up to 3 years and fine up to Rs. 1 lakh.
+
+Section 66E — Punishment for Violation of Privacy:
+Whoever intentionally captures, publishes, or transmits the image of a private area of any person without their consent shall be punished with imprisonment up to 3 years or fine up to Rs. 2 lakhs or both.
+
+Section 67 — Publishing or Transmitting Obscene Material:
+First conviction: imprisonment up to 3 years and fine up to Rs. 5 lakhs.
+Subsequent conviction: imprisonment up to 5 years and fine up to Rs. 10 lakhs.
+
+Section 67A — Publishing Sexually Explicit Material:
+First conviction: imprisonment up to 5 years and fine up to Rs. 10 lakhs.
+Subsequent conviction: imprisonment up to 7 years and fine up to Rs. 10 lakhs.
+
+Section 67B — Child Pornography:
+First conviction: imprisonment up to 5 years and fine up to Rs. 10 lakhs.
+Subsequent conviction: imprisonment up to 7 years and fine up to Rs. 10 lakhs.
+
+COMMON CYBER CRIMES AND APPLICABLE SECTIONS
+--------------------------------------------
+
+1. Online Banking Fraud / UPI Fraud → Sections 43, 66, 66C, 66D
+2. Phishing → Section 66D (Cheating by Personation)
+3. Hacking → Sections 43, 66
+4. Identity Theft → Section 66C
+5. Cyber Stalking → Section 354D IPC (Section 78 BNS)
+6. Online Defamation → Section 499/500 IPC (Section 356 BNS)
+7. Email Spoofing → Sections 66C, 66D
+8. Data Breach → Sections 43, 43A, 72A
+9. Ransomware → Sections 43, 66, 66A (if applicable)
+10. Social Media Abuse → Sections 66C, 66D, 67
+
+CYBER CRIME REPORTING
+---------------------
+
+1. National Cyber Crime Reporting Portal: https://cybercrime.gov.in
+   - File complaints for financial fraud, women/child-related cyber crimes, and other cyber crimes
+   - Track complaint status online
+
+2. Cyber Crime Helpline: 1930 (toll-free, 24x7)
+   - Immediate assistance for online financial fraud
+   - Helps in freezing suspected fraudulent transactions
+
+3. Local Police Station: File an FIR under IT Act sections at any police station
+
+4. Cyber Crime Cells: Most states have dedicated cyber crime police stations / cells
+
+IMPORTANT: Report financial cyber fraud within the "Golden Hour" (first few hours) by calling 1930 to maximise chances of recovering funds.
+
+DIGITAL PERSONAL DATA PROTECTION ACT, 2023
+--------------------------------------------
+India's data protection law gives individuals rights over their personal data:
+- Right to access and correct data
+- Right to erase data
+- Right to grievance redressal
+- Data fiduciaries must obtain consent and implement security safeguards
+- Significant penalties for data breaches (up to Rs. 250 crores)
