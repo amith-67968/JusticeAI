@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutGrid, Filter, Search, PlusCircle, FolderOpen, LogOut, User, ArrowLeft } from 'lucide-react';
+import { LayoutGrid, Filter, Search, PlusCircle, FolderOpen, User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import DocumentCard from '../components/DocumentCard';
 
@@ -50,11 +50,6 @@ const Documents = () => {
             <span className="text-sm font-medium text-gray-900">Profile</span>
           </button>
 
-          {/* Logout */}
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-50 transition text-red-600">
-            <LogOut size={18} />
-            <span className="text-sm font-medium">Logout</span>
-          </button>
         </div>
       </div>
 

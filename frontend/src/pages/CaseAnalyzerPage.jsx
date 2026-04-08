@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   FileSearch,
   AlertTriangle,
-  LogOut,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -17,7 +16,7 @@ import { api } from '../lib/api';
 
 const CaseAnalyzerPage = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [file, setFile] = useState(null);
   const [isDragActive, setIsDragActive] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -101,7 +100,7 @@ const CaseAnalyzerPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col pt-6">
-      <div className="px-6 mb-6 flex items-start justify-between gap-4">
+      <div className="px-6 mb-6 flex items-start gap-4">
         <div>
           <div className="flex items-start gap-4">
             <button
@@ -118,17 +117,6 @@ const CaseAnalyzerPage = () => {
             </div>
           </div>
         </div>
-
-        <button
-          onClick={() => {
-            logout();
-            navigate('/', { replace: true });
-          }}
-          className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 shadow-sm hover:text-slate-900"
-        >
-          <LogOut size={16} />
-          Logout
-        </button>
       </div>
 
       <div className="flex justify-center mt-10 px-4 w-full">

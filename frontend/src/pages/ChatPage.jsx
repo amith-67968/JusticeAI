@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, LogOut, ArrowLeft, Mic } from 'lucide-react';
+import { Send, ArrowLeft, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 import { useAuth } from '../context/AuthContext';
@@ -75,7 +75,7 @@ const getLocation = () => {
 
 const ChatPage = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     {
       id: 'welcome-message',
@@ -202,7 +202,7 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-white shrink-0">
+      <div className="flex items-center px-6 py-4 border-b border-slate-200 bg-white shrink-0">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/dashboard')}
@@ -216,16 +216,6 @@ const ChatPage = () => {
             <p className="text-xs text-slate-500">{user?.name || 'Current session'}</p>
           </div>
         </div>
-        <button
-          onClick={() => {
-            logout();
-            navigate('/', { replace: true });
-          }}
-          className="text-slate-500 hover:text-slate-900 transition-colors"
-          title="Logout"
-        >
-          <LogOut size={20} />
-        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">

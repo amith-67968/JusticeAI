@@ -1,17 +1,11 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Scale, LogOut, MessageSquare, LayoutDashboard, FileText, UploadCloud } from 'lucide-react';
+import { Scale, MessageSquare, LayoutDashboard, FileText, UploadCloud } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Navbar = () => {
-  const { logout, user } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+  const { user } = useAuth();
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -58,13 +52,6 @@ const Navbar = () => {
             <p className="text-sm font-medium text-slate-900">{user?.name}</p>
             <p className="text-xs text-text-tertiary">Premium Plan</p>
           </div>
-          <button 
-            onClick={handleLogout}
-            className="p-2.5 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors"
-            title="Logout"
-          >
-            <LogOut size={20} />
-          </button>
         </div>
       </div>
     </motion.nav>

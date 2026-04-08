@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, LogOut, ArrowLeft, Mic } from 'lucide-react';
+import { Send, ArrowLeft, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 
@@ -58,7 +58,7 @@ const Chat = () => {
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Minimal Header */}
-      <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-white shrink-0">
+      <div className="flex items-center px-6 py-4 border-b border-slate-200 bg-white shrink-0">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/dashboard')} 
@@ -69,13 +69,6 @@ const Chat = () => {
           </button>
           <h1 className="text-xl font-bold text-slate-900">JusticeAI</h1>
         </div>
-        <button 
-          onClick={() => navigate('/')} 
-          className="text-slate-500 hover:text-slate-900 transition-colors" 
-          title="Logout"
-        >
-          <LogOut size={20} />
-        </button>
       </div>
       
       {/* Scrollable Chat Area */}

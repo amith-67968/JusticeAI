@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, Search, PlusCircle, FolderOpen, LogOut, User, ArrowLeft } from 'lucide-react';
+import { Filter, Search, PlusCircle, FolderOpen, User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import DocumentCard from '../components/DocumentCard';
 import { useAuth } from '../context/AuthContext';
@@ -61,7 +61,7 @@ const buildSummary = (document) => {
 
 const DocumentsPage = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [docs, setDocs] = useState([]);
@@ -179,17 +179,6 @@ const DocumentsPage = () => {
               <User size={16} />
             </span>
             <span className="text-sm font-medium text-gray-900">{user?.name || 'Profile'}</span>
-          </button>
-
-          <button
-            onClick={() => {
-              logout();
-              navigate('/', { replace: true });
-            }}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-50 transition text-red-600"
-          >
-            <LogOut size={18} />
-            <span className="text-sm font-medium">Logout</span>
           </button>
         </div>
       </div>
