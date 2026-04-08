@@ -55,6 +55,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => getStoredSession());
   const [loading, setLoading] = useState(false);
+  const [logoutRedirectTo, setLogoutRedirectTo] = useState(null);
 
   const persistSession = (nextUser) => {
     if (nextUser) {
@@ -83,6 +84,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       const sessionUser = buildSessionUser(matchedAccount);
+      setLogoutRedirectTo(null);
       persistSession(sessionUser);
       setUser(sessionUser);
       return sessionUser;
@@ -121,6 +123,7 @@ export const AuthProvider = ({ children }) => {
       writeStoredJson(ACCOUNTS_STORAGE_KEY, [...accounts, nextAccount]);
 
       const sessionUser = buildSessionUser(nextAccount);
+      setLogoutRedirectTo(null);
       persistSession(sessionUser);
       setUser(sessionUser);
       return sessionUser;
@@ -129,7 +132,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (redirectTo = '/') => {
+    setLogoutRedirectTo(redirectTo);
     persistSession(null);
     setUser(null);
   };
@@ -138,6 +142,7 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     isAuthenticated: Boolean(user),
+    logoutRedirectTo,
     login,
     signup,
     logout,
