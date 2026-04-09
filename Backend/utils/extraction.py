@@ -81,6 +81,27 @@ def detect_and_extract(filename: str, file_bytes: bytes) -> str:
         return extract_text_from_pdf(file_bytes)
 
 
+_MAX_EXTRACTED_DATES = 12
+_MAX_EXTRACTED_MONEY_VALUES = 10
+
+
+def _normalize_date_value(value: str) -> str:
+    value = re.sub(r"\s+", " ", value).strip()
+    if re.fullmatch(r"\d{1,2}[/\-\.]\d{1,2}[/\-\.]\d{2,4}", value):
+        parts = re.split(r"[/\-\.]", value)
+        return "/".join(parts)
+    return value.title()
+
+
+def _normalize_money_value(value: str) -> str:
+    value = re.sub(r"\s+", " ", value).strip()
+    value = value.replace("₹", "Rs. ")
+    value = re.sub(r"^Rs\s+", "Rs. ", value, flags=re.IGNORECASE)
+    value = re.sub(r"^Rs\.\s*", "Rs. ", value, flags=re.IGNORECASE)
+    value = re.sub(r"^INR\s+", "INR ", value, flags=re.IGNORECASE)
+    return value
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Regex helpers
 # ═══════════════════════════════════════════════════════════════════════════
@@ -103,10 +124,12 @@ def extract_dates_regex(text: str) -> list[str]:
 
     for pattern in patterns:
         for match in re.finditer(pattern, text, re.IGNORECASE):
-            value = match.group(1).strip()
+            value = _normalize_date_value(match.group(1))
             if value not in seen:
                 seen.add(value)
                 results.append(value)
+                if len(results) >= _MAX_EXTRACTED_DATES:
+                    return results
 
     return results
 
@@ -125,9 +148,11 @@ def extract_money_regex(text: str) -> list[str]:
 
     for pattern in patterns:
         for match in re.finditer(pattern, text, re.IGNORECASE):
-            value = match.group(0).strip()
+            value = _normalize_money_value(match.group(0))
             if value not in seen:
                 seen.add(value)
                 results.append(value)
+                if len(results) >= _MAX_EXTRACTED_MONEY_VALUES:
+                    return results
 
     return results

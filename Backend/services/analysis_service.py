@@ -264,6 +264,15 @@ def _fallback_analysis(
     documents: Optional[list[dict]] = None,
 ) -> dict:
     """Return a structured fallback when the LLM is unavailable."""
+    def describe_count(count: int, singular_label: str, plural_label: str) -> str:
+        if count <= 0:
+            return ""
+        if count == 1:
+            return f"1 {singular_label}"
+        if count <= 4:
+            return f"{count} {plural_label}"
+        return f"multiple {plural_label}"
+
     docs = [doc for doc in (documents or []) if isinstance(doc, dict)]
     if not docs and structured_data:
         docs = [structured_data]
@@ -328,13 +337,30 @@ def _fallback_analysis(
 
     factual_parts: list[str] = []
     if len(parties) >= 2:
-        factual_parts.append(f"{len(parties)} parties were identified")
+        factual_parts.append(describe_count(len(parties), "party", "parties") + " were identified")
     if dates:
-        factual_parts.append(f"{len(dates)} date reference(s) were detected")
+        factual_parts.append(
+            describe_count(len(dates), "date reference", "date references")
+            + " were detected"
+        )
     if money_values:
-        factual_parts.append(f"{len(money_values)} monetary reference(s) were found")
+        factual_parts.append(
+            describe_count(
+                len(money_values),
+                "monetary reference",
+                "monetary references",
+            )
+            + " were found"
+        )
     if key_clauses:
-        factual_parts.append(f"{len(key_clauses)} important clause or fact snippet(s) were extracted")
+        factual_parts.append(
+            describe_count(
+                len(key_clauses),
+                "important clause or fact snippet",
+                "important clause or fact snippets",
+            )
+            + " were extracted"
+        )
 
     if factual_parts:
         summary_parts.append(", and " + ", ".join(factual_parts))
@@ -405,14 +431,33 @@ def _fallback_analysis(
     reason_parts: list[str] = []
     if provided_reason:
         reason_parts.append(provided_reason.rstrip("."))
-    if parties:
-        reason_parts.append(f"{len(parties)} party name(s) were detected")
-    if dates:
-        reason_parts.append(f"{len(dates)} date(s) were detected")
-    if money_values:
-        reason_parts.append(f"{len(money_values)} monetary reference(s) were found")
-    if key_clauses:
-        reason_parts.append(f"{len(key_clauses)} key factual snippet(s) were extracted")
+    else:
+        if parties:
+            reason_parts.append(
+                describe_count(len(parties), "party", "parties") + " were detected"
+            )
+        if dates:
+            reason_parts.append(
+                describe_count(len(dates), "date", "dates") + " were detected"
+            )
+        if money_values:
+            reason_parts.append(
+                describe_count(
+                    len(money_values),
+                    "monetary reference",
+                    "monetary references",
+                )
+                + " were found"
+            )
+        if key_clauses:
+            reason_parts.append(
+                describe_count(
+                    len(key_clauses),
+                    "key factual snippet",
+                    "key factual snippets",
+                )
+                + " were extracted"
+            )
 
     document_reason = ". ".join(reason_parts).strip()
     if document_reason:

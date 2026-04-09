@@ -294,6 +294,16 @@ def _select_key_clauses(raw_text: str, case_type: str) -> list[str]:
     return selected
 
 
+def _describe_signal_count(count: int, singular_label: str, plural_label: str) -> str:
+    if count <= 0:
+        return ""
+    if count == 1:
+        return f"1 {singular_label}"
+    if count <= 4:
+        return f"{count} {plural_label}"
+    return f"multiple {plural_label}"
+
+
 def _heuristic_document_extraction(
     raw_text: str,
     filename: str,
@@ -340,16 +350,30 @@ def _heuristic_document_extraction(
 
     reason_parts: list[str] = []
     if parties:
-        reason_parts.append(f"{len(parties)} party name(s) detected")
+        reason_parts.append(_describe_signal_count(len(parties), "party", "parties") + " detected")
     if dates:
-        reason_parts.append(f"{len(dates)} date(s) found")
+        reason_parts.append(_describe_signal_count(len(dates), "date reference", "date references") + " found")
     if money_values:
-        reason_parts.append(f"{len(money_values)} monetary reference(s) found")
+        reason_parts.append(
+            _describe_signal_count(
+                len(money_values),
+                "monetary reference",
+                "monetary references",
+            )
+            + " found"
+        )
     if key_clauses:
-        reason_parts.append(f"{len(key_clauses)} important clause or fact snippet(s) extracted")
+        reason_parts.append(
+            _describe_signal_count(
+                len(key_clauses),
+                "important clause or fact snippet",
+                "important clause or fact snippets",
+            )
+            + " extracted"
+        )
 
     reason = (
-        "Heuristic extraction identified "
+        "Heuristic extraction found "
         + ", ".join(reason_parts)
         + "."
         if reason_parts
