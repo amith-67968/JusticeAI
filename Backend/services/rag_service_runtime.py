@@ -21,6 +21,7 @@ from config import settings
 from utils.embeddings import SentenceTransformerEmbeddings
 from utils.llm import (
     JSON_OBJECT_RESPONSE_FORMAT,
+    extract_json_object,
     extract_response_content,
     get_groq_client,
 )
@@ -400,26 +401,51 @@ class RAGService:
             client = get_groq_client()
             prompt = CHAT_USER.format(query=query, context=context)
 
-            response = await client.chat.completions.create(
-                model=settings.GROQ_MODEL,
-                messages=[
-                    {"role": "system", "content": CHAT_SYSTEM},
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.2,
-                max_completion_tokens=2000,
-                response_format=JSON_OBJECT_RESPONSE_FORMAT,
-            )
+            messages = [
+                {"role": "system", "content": CHAT_SYSTEM},
+                {"role": "user", "content": prompt},
+            ]
+
+            try:
+                response = await client.chat.completions.create(
+                    model=settings.GROQ_MODEL,
+                    messages=messages,
+                    temperature=0.2,
+                    max_completion_tokens=2000,
+                    response_format=JSON_OBJECT_RESPONSE_FORMAT,
+                )
+            except Exception as structured_exc:
+                print(
+                    "[rag] Structured JSON response failed; retrying without "
+                    f"response_format: {type(structured_exc).__name__}: {structured_exc}"
+                )
+                response = await client.chat.completions.create(
+                    model=settings.GROQ_MODEL,
+                    messages=messages,
+                    temperature=0.2,
+                    max_completion_tokens=2000,
+                )
 
             raw = extract_response_content(response).strip()
-            if raw.startswith("```json"):
-                raw = raw[7:]
-            elif raw.startswith("```"):
-                raw = raw[3:]
-            if raw.endswith("```"):
-                raw = raw[:-3]
+            try:
+                result = extract_json_object(raw)
+            except Exception as parse_exc:
+                print(
+                    "[rag] JSON parse failed; using plain-text fallback: "
+                    f"{type(parse_exc).__name__}: {parse_exc}"
+                )
+                result = {
+                    "answer": raw.strip(),
+                    "relevant_laws": [],
+                    "explanation": "",
+                    "why_applicable": "",
+                    "next_steps": [
+                        "Contact the nearest police station or emergency helpline if you are in immediate danger.",
+                        "Preserve evidence such as videos, messages, names, route details, and timestamps.",
+                    ],
+                    "sources": sources,
+                }
 
-            result = json.loads(raw.strip())
             if not result.get("sources"):
                 result["sources"] = sources
             return result

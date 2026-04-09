@@ -4,6 +4,7 @@ JusticeAI — Shared async Groq client (lazy singleton).
 
 from __future__ import annotations
 
+import json
 import sys
 from typing import Any
 
@@ -66,3 +67,65 @@ def extract_response_content(response: Any) -> str:
         raise RuntimeError("Response content is empty")
 
     return text
+
+
+def strip_code_fences(text: str) -> str:
+    """Remove optional markdown code fences around model output."""
+    text = text.strip()
+
+    if text.startswith("```json"):
+        text = text[7:]
+    elif text.startswith("```"):
+        text = text[3:]
+
+    if text.endswith("```"):
+        text = text[:-3]
+
+    return text.strip()
+
+
+def extract_json_object(text: str) -> dict[str, Any]:
+    """Parse a JSON object from model output with small formatting tolerance."""
+    cleaned = strip_code_fences(text)
+
+    try:
+        parsed = json.loads(cleaned)
+        if isinstance(parsed, dict):
+            return parsed
+    except json.JSONDecodeError:
+        pass
+
+    start_index = cleaned.find("{")
+    if start_index == -1:
+        raise ValueError("No JSON object found in model output.")
+
+    depth = 0
+    in_string = False
+    escaped = False
+
+    for index in range(start_index, len(cleaned)):
+        char = cleaned[index]
+
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = cleaned[start_index : index + 1]
+                parsed = json.loads(candidate)
+                if isinstance(parsed, dict):
+                    return parsed
+                break
+
+    raise ValueError("Unable to parse JSON object from model output.")
