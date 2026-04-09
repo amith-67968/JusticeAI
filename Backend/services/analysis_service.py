@@ -9,7 +9,8 @@ from typing import Optional
 
 from config import settings
 from utils.llm import (
-    JSON_OBJECT_RESPONSE_FORMAT,
+    create_json_completion_with_fallback,
+    extract_json_object,
     extract_response_content,
     get_groq_client,
 )
@@ -203,7 +204,8 @@ async def analyze_case(
             case_type=case_type,
         )
 
-        response = await client.chat.completions.create(
+        response = await create_json_completion_with_fallback(
+            client,
             model=settings.GROQ_MODEL,
             messages=[
                 {"role": "system", "content": ANALYSIS_SYSTEM},
@@ -211,11 +213,10 @@ async def analyze_case(
             ],
             temperature=0.0,
             max_completion_tokens=2000,
-            response_format=JSON_OBJECT_RESPONSE_FORMAT,
         )
 
         raw = extract_response_content(response)
-        analysis = json.loads(_strip_json_fences(raw))
+        analysis = extract_json_object(raw)
 
     except Exception as exc:
         print(f"[analysis] LLM error: {exc}")

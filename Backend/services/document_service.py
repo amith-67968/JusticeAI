@@ -33,6 +33,8 @@ from utils.extraction import (
 )
 from utils.llm import (
     JSON_OBJECT_RESPONSE_FORMAT,
+    create_json_completion_with_fallback,
+    extract_json_object,
     extract_response_content,
     get_groq_client,
 )
@@ -181,7 +183,8 @@ async def process_document(
         truncated = raw_text[: settings.MAX_EXTRACTION_CHARS]
         prompt = EXTRACTION_USER.format(text=truncated)
 
-        response = await client.chat.completions.create(
+        response = await create_json_completion_with_fallback(
+            client,
             model=settings.GROQ_MODEL,
             messages=[
                 {"role": "system", "content": EXTRACTION_SYSTEM},
@@ -189,11 +192,10 @@ async def process_document(
             ],
             temperature=0.0,
             max_completion_tokens=2000,
-            response_format=JSON_OBJECT_RESPONSE_FORMAT,
         )
 
         raw_json = extract_response_content(response)
-        parsed = json.loads(_strip_json_fences(raw_json))
+        parsed = extract_json_object(raw_json)
         documents_list = parsed.get("documents", [])
     except Exception as exc:
         print(f"[document_service] LLM extraction error: {exc}")

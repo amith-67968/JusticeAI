@@ -129,3 +129,33 @@ def extract_json_object(text: str) -> dict[str, Any]:
                 break
 
     raise ValueError("Unable to parse JSON object from model output.")
+
+
+async def create_json_completion_with_fallback(
+    client: Any,
+    *,
+    model: str,
+    messages: list[dict[str, str]],
+    temperature: float,
+    max_completion_tokens: int,
+):
+    """Request a JSON completion, retrying without strict JSON mode if needed."""
+    try:
+        return await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            max_completion_tokens=max_completion_tokens,
+            response_format=JSON_OBJECT_RESPONSE_FORMAT,
+        )
+    except Exception as structured_exc:
+        print(
+            "[llm] Structured JSON response failed; retrying without "
+            f"response_format: {type(structured_exc).__name__}: {structured_exc}"
+        )
+        return await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            max_completion_tokens=max_completion_tokens,
+        )

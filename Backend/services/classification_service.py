@@ -158,6 +158,32 @@ LOW_CONFIDENCE_PROBABILITY = 0.45
 LOW_CONFIDENCE_SIMILARITY = 0.30
 
 
+def _keyword_only_scores(text: str) -> dict[str, float]:
+    """Lightweight fallback classifier when transformers/torch are unavailable."""
+    lower = text.lower()
+    raw_scores: dict[str, float] = {}
+
+    for label in CASE_LABELS:
+        hits = sum(1 for kw in KEYWORD_HINTS[label] if kw in lower)
+        raw_scores[label] = float(hits)
+
+    total = sum(raw_scores.values())
+    if total <= 0:
+        return {
+            "Others": 1.0,
+            "Consumer Dispute": 0.0,
+            "Civil Dispute": 0.0,
+            "Criminal": 0.0,
+            "Cyber Crime": 0.0,
+        }
+
+    normalized = {
+        label: round(score / total, 4)
+        for label, score in raw_scores.items()
+    }
+    return dict(sorted(normalized.items(), key=lambda kv: kv[1], reverse=True))
+
+
 class CaseClassifier:
     """Encoder-based classifier using InLegalBERT embeddings, cosine similarity,
     keyword boosts, and a low-confidence fallback to 'Others'."""
@@ -272,7 +298,7 @@ class CaseClassifier:
         self.load_model()
 
         if self._model is None or self._label_embeddings is None:
-            return {label: 0.0 for label in CASE_LABELS}
+            return _keyword_only_scores(text)
 
         import torch
 
@@ -317,7 +343,7 @@ class CaseClassifier:
 
         except Exception as exc:
             print(f"[classifier] classify_with_scores error: {exc}")
-            return {label: 0.0 for label in CASE_LABELS}
+            return _keyword_only_scores(text)
 
     # ── classify ─────────────────────────────────────────────────────────
 
@@ -325,7 +351,10 @@ class CaseClassifier:
         scores = self.classify_with_scores(text)
         if not scores:
             return "Others"
-        return max(scores, key=scores.get)
+        top_label = max(scores, key=scores.get)
+        if scores.get(top_label, 0.0) <= 0:
+            return "Others"
+        return top_label
 
 
 # ── Override the legacy definition ───────────────────────────────────────
