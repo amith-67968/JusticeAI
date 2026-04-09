@@ -228,7 +228,7 @@ This repo includes `render.yaml` and `Backend/.python-version` for Render deploy
 2. In Render, create a new **Blueprint** or **Web Service** from the repo.
 3. Use these backend settings:
    - Root Directory: `Backend`
-   - Build Command: `pip install -r requirements.txt`
+   - Build Command: `pip install -r requirements-render.txt`
    - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
    - Health Check Path: `/health`
 4. Add these Render environment variables:
@@ -238,7 +238,7 @@ This repo includes `render.yaml` and `Backend/.python-version` for Render deploy
    - `GOOGLE_PLACES_API_KEY` *(optional)*
 5. Deploy and verify `https://your-render-service.onrender.com/health`.
 
-Important: the backend can fall back to local storage when Supabase is missing, but that fallback is not suitable for long-term production storage on Render. Use Supabase in production.
+Important: the Render deploy uses a lighter dependency set on the free tier, so the backend falls back to lighter classification and retrieval paths instead of loading the full local ML stack. Also, local storage fallback is not suitable for long-term production storage on Render, so use Supabase in production.
 
 ---
 
