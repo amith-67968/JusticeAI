@@ -220,7 +220,13 @@ async def analyze_case(
 
     except Exception as exc:
         print(f"[analysis] LLM error: {exc}")
-        return _fallback_analysis(rule_flags, score_adj, case_type)
+        return _fallback_analysis(
+            rule_flags,
+            score_adj,
+            case_type,
+            structured_data=structured_data,
+            documents=documents,
+        )
 
     # 4. Normalise
     analysis["case_strength"] = _normalize_strength(
@@ -254,8 +260,183 @@ def _fallback_analysis(
     rule_flags: list[str],
     score_adj: int,
     case_type: str,
+    structured_data: Optional[dict] = None,
+    documents: Optional[list[dict]] = None,
 ) -> dict:
-    """Return a safe default when LLM fails."""
+    """Return a structured fallback when the LLM is unavailable."""
+    docs = [doc for doc in (documents or []) if isinstance(doc, dict)]
+    if not docs and structured_data:
+        docs = [structured_data]
+
+    primary = docs[0] if docs else (structured_data or {})
+
+    parties = primary.get("parties") or []
+    dates = primary.get("dates") or []
+    money_values = primary.get("monetary_values") or []
+    key_clauses = primary.get("key_clauses") or []
+    missing_elements = [item.lower() for item in (primary.get("missing_elements") or [])]
+    document_type = primary.get("document_type") or "Uploaded Document"
+    evidence_strength = _normalize_strength(primary.get("evidence_strength", "Moderate"))
+    provided_reason = str(primary.get("reason") or "").strip()
+
+    confidence = 45 + score_adj
+    if evidence_strength == "Strong":
+        confidence += 20
+    elif evidence_strength == "Moderate":
+        confidence += 10
+    else:
+        confidence -= 5
+
+    if len(parties) >= 2:
+        confidence += 10
+    elif parties:
+        confidence += 4
+    if dates:
+        confidence += 6
+    if money_values:
+        confidence += 6
+    if key_clauses:
+        confidence += 8
+    if not parties:
+        confidence -= 10
+    if not dates:
+        confidence -= 8
+    if not key_clauses:
+        confidence -= 8
+
+    confidence = max(20, min(92, confidence))
+
+    if confidence >= 75:
+        case_strength = "Strong"
+    elif confidence >= 45:
+        case_strength = "Moderate"
+    else:
+        case_strength = "Weak"
+
+    if len(missing_elements) >= 3 or (not parties and not dates):
+        case_difficulty = "Hard"
+    elif confidence >= 72 and len(missing_elements) <= 1:
+        case_difficulty = "Easy"
+    else:
+        case_difficulty = "Moderate"
+
+    summary_parts: list[str] = []
+    if case_type and case_type != "Unknown":
+        summary_parts.append(f"This appears to be a {case_type.lower()} matter")
+    else:
+        summary_parts.append("The uploaded material appears to describe a legal dispute")
+
+    factual_parts: list[str] = []
+    if len(parties) >= 2:
+        factual_parts.append(f"{len(parties)} parties were identified")
+    if dates:
+        factual_parts.append(f"{len(dates)} date reference(s) were detected")
+    if money_values:
+        factual_parts.append(f"{len(money_values)} monetary reference(s) were found")
+    if key_clauses:
+        factual_parts.append(f"{len(key_clauses)} important clause or fact snippet(s) were extracted")
+
+    if factual_parts:
+        summary_parts.append(", and " + ", ".join(factual_parts))
+
+    if missing_elements:
+        summary_parts.append(
+            ". Some important details still need confirmation, especially "
+            + ", ".join(missing_elements[:3])
+        )
+
+    summary = "".join(summary_parts).strip() + "."
+
+    strong_points = ["Case type has been identified from the uploaded material."]
+    if len(parties) >= 2:
+        strong_points.append("Both sides or multiple parties appear in the extracted record.")
+    if dates:
+        strong_points.append("The document includes date references that help support a timeline.")
+    if money_values:
+        strong_points.append("Monetary amounts were detected, which can help quantify the claim.")
+    if key_clauses:
+        strong_points.append("Important clauses or factual passages were extracted from the document.")
+
+    weak_points: list[str] = []
+    if not parties:
+        weak_points.append("Party details are incomplete, which weakens attribution and liability analysis.")
+    if not dates:
+        weak_points.append("Date references are limited, making the timeline harder to prove.")
+    if not key_clauses:
+        weak_points.append("Key clauses or factual statements were not extracted cleanly.")
+    if not weak_points:
+        weak_points.append("Automated review used fallback scoring because the live AI analysis was unavailable.")
+
+    next_steps: list[str] = []
+    lowered_case_type = case_type.lower()
+    if "consumer" in lowered_case_type:
+        next_steps.extend(
+            [
+                "Keep the invoice, order screenshots, payment proof, and seller communications together.",
+                "Send a written complaint or legal notice asking for refund, replacement, or compensation.",
+                "If unresolved, prepare for a Consumer Commission complaint with the supporting documents.",
+            ]
+        )
+    elif "criminal" in lowered_case_type:
+        next_steps.extend(
+            [
+                "Preserve the incident evidence, witness details, and any complaint or FIR references.",
+                "Write down the full timeline before approaching the police or counsel.",
+                "Consult a criminal lawyer promptly if immediate protection or procedure advice is needed.",
+            ]
+        )
+    elif "cyber" in lowered_case_type:
+        next_steps.extend(
+            [
+                "Save screenshots, transaction IDs, device details, and account identifiers.",
+                "Report quickly through the appropriate cyber-crime channel or police station.",
+                "Document each loss and communication linked to the incident.",
+            ]
+        )
+    else:
+        next_steps.extend(
+            [
+                "Organize the full set of supporting documents, notices, and correspondence.",
+                "Prepare a short written timeline covering the parties, dates, and disputed events.",
+                "Consult a qualified advocate to review strategy, limitation, and remedy options.",
+            ]
+        )
+
+    reason_parts: list[str] = []
+    if provided_reason:
+        reason_parts.append(provided_reason.rstrip("."))
+    if parties:
+        reason_parts.append(f"{len(parties)} party name(s) were detected")
+    if dates:
+        reason_parts.append(f"{len(dates)} date(s) were detected")
+    if money_values:
+        reason_parts.append(f"{len(money_values)} monetary reference(s) were found")
+    if key_clauses:
+        reason_parts.append(f"{len(key_clauses)} key factual snippet(s) were extracted")
+
+    document_reason = ". ".join(reason_parts).strip()
+    if document_reason:
+        document_reason += "."
+    else:
+        document_reason = "Only limited structured details could be extracted from the uploaded material."
+
+    return {
+        "case_strength": case_strength,
+        "case_difficulty": case_difficulty,
+        "confidence_score": confidence,
+        "summary": summary,
+        "strong_points": strong_points[:4],
+        "weak_points": weak_points[:4],
+        "next_steps": next_steps[:3],
+        "document_analysis": [
+            {
+                "document_type": document_type,
+                "evidence_strength": evidence_strength,
+                "reason": document_reason,
+            }
+        ],
+        "rule_flags": rule_flags,
+    }
     return {
         "case_strength": "Moderate",
         "case_difficulty": "Moderate",

@@ -127,6 +127,58 @@ def _empty_extraction() -> dict:
     }
 
 
+_DOCUMENT_TYPE_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("FIR", ("fir", "first information report", "police complaint")),
+    ("Court Order", ("judgment", "court order", "decree", "award")),
+    ("Legal Notice", ("legal notice", "notice issued", "demand notice")),
+    ("Agreement", ("agreement", "contract", "terms and conditions", "memorandum")),
+    ("Insurance Policy", ("insurance", "policy", "claim form", "claim repudiation")),
+    ("Invoice / Receipt", ("invoice", "receipt", "tax invoice", "bill no", "gst")),
+    ("Complaint", ("complaint", "consumer complaint", "grievance", "petition")),
+    ("Affidavit", ("affidavit", "sworn statement")),
+)
+
+_KEY_CLAUSE_HINTS: dict[str, tuple[str, ...]] = {
+    "Consumer Dispute": (
+        "defect",
+        "defective",
+        "refund",
+        "replacement",
+        "warranty",
+        "seller",
+        "invoice",
+        "delivery",
+    ),
+    "Civil Dispute": (
+        "agreement",
+        "contract",
+        "clause",
+        "breach",
+        "payment",
+        "notice",
+        "liability",
+    ),
+    "Criminal": (
+        "complaint",
+        "police",
+        "accused",
+        "offence",
+        "incident",
+        "witness",
+        "assault",
+    ),
+    "Cyber Crime": (
+        "otp",
+        "transaction",
+        "fraud",
+        "unauthorized",
+        "account",
+        "password",
+        "phishing",
+    ),
+}
+
+
 def _normalize_strength(value: str) -> str:
     mapping = {"weak": "weak", "moderate": "moderate", "strong": "strong"}
     return mapping.get(value.strip().lower(), "moderate")
@@ -141,6 +193,190 @@ def _strip_json_fences(text: str) -> str:
     if text.endswith("```"):
         text = text[:-3]
     return text.strip()
+
+
+def _clean_party_name(value: str) -> str:
+    value = re.sub(r"\s+", " ", value).strip(" :-,.;")
+    return value[:100]
+
+
+def _infer_document_type(raw_text: str, filename: str) -> str:
+    combined = f"{filename} {raw_text[:3000]}".lower()
+    for label, keywords in _DOCUMENT_TYPE_PATTERNS:
+        if any(keyword in combined for keyword in keywords):
+            return label
+    return "Uploaded Document"
+
+
+def _extract_parties_heuristic(raw_text: str, filename: str) -> list[str]:
+    seen: set[str] = set()
+    parties: list[str] = []
+
+    filename_text = filename.rsplit(".", 1)[0].replace("_", " ").replace("-", " ")
+    candidate_lines = raw_text.splitlines()[:250] + [filename_text]
+
+    versus_pattern = re.compile(
+        r"(.{3,80}?)\s+v(?:s\.?|ersus)\s+(.{3,80})",
+        re.IGNORECASE,
+    )
+    role_patterns = (
+        re.compile(
+            r"(?:complainant|petitioner|appellant|plaintiff|claimant)\s*[:\-]\s*"
+            r"([A-Z][A-Za-z0-9&.,()'/ -]{2,80})"
+        ),
+        re.compile(
+            r"(?:respondent|defendant|accused|seller|opposite party)\s*[:\-]\s*"
+            r"([A-Z][A-Za-z0-9&.,()'/ -]{2,80})"
+        ),
+    )
+
+    def add_party(value: str) -> None:
+        cleaned = _clean_party_name(value)
+        lowered = cleaned.lower()
+        if len(cleaned) < 3 or lowered in seen:
+            return
+        seen.add(lowered)
+        parties.append(cleaned)
+
+    for line in candidate_lines:
+        compact = re.sub(r"\s+", " ", line).strip()
+        if not compact:
+            continue
+
+        versus_match = versus_pattern.search(compact)
+        if versus_match:
+            add_party(versus_match.group(1))
+            add_party(versus_match.group(2))
+
+        for pattern in role_patterns:
+            role_match = pattern.search(compact)
+            if role_match:
+                add_party(role_match.group(1))
+
+        if len(parties) >= 4:
+            break
+
+    return parties[:4]
+
+
+def _select_key_clauses(raw_text: str, case_type: str) -> list[str]:
+    clause_keywords = set(
+        _KEY_CLAUSE_HINTS.get(case_type, ())
+        + ("section", "clause", "agreement", "payment", "notice")
+    )
+    sentences = [
+        re.sub(r"\s+", " ", chunk).strip()
+        for chunk in re.split(r"(?<=[.!?])\s+|\n+", raw_text)
+    ]
+
+    ranked: list[tuple[int, str]] = []
+    for sentence in sentences:
+        if len(sentence) < 30 or len(sentence) > 220:
+            continue
+        lowered = sentence.lower()
+        score = sum(1 for keyword in clause_keywords if keyword in lowered)
+        if score:
+            ranked.append((score, sentence))
+
+    ranked.sort(key=lambda item: item[0], reverse=True)
+
+    selected: list[str] = []
+    seen: set[str] = set()
+    for _, sentence in ranked:
+        lowered = sentence.lower()
+        if lowered in seen:
+            continue
+        seen.add(lowered)
+        selected.append(sentence)
+        if len(selected) == 4:
+            break
+
+    return selected
+
+
+def _heuristic_document_extraction(
+    raw_text: str,
+    filename: str,
+    case_type: str,
+) -> dict:
+    parties = _extract_parties_heuristic(raw_text, filename)
+    dates = extract_dates_regex(raw_text)
+    money_values = extract_money_regex(raw_text)
+    key_clauses = _select_key_clauses(raw_text, case_type)
+    document_type = _infer_document_type(raw_text, filename)
+
+    missing_elements: list[str] = []
+    if not parties:
+        missing_elements.append("parties")
+    if not dates:
+        missing_elements.append("date")
+    if case_type == "Consumer Dispute" and not money_values:
+        missing_elements.append("payment proof")
+    if not key_clauses:
+        missing_elements.append("key clauses")
+
+    signal_score = 0
+    if len(parties) >= 2:
+        signal_score += 2
+    elif parties:
+        signal_score += 1
+    if dates:
+        signal_score += 1
+    if money_values:
+        signal_score += 1
+    if key_clauses:
+        signal_score += 1
+    if document_type != "Uploaded Document":
+        signal_score += 1
+    if len(raw_text) >= 1500:
+        signal_score += 1
+
+    if signal_score >= 6:
+        evidence_strength = "Strong"
+    elif signal_score >= 3:
+        evidence_strength = "Moderate"
+    else:
+        evidence_strength = "Weak"
+
+    reason_parts: list[str] = []
+    if parties:
+        reason_parts.append(f"{len(parties)} party name(s) detected")
+    if dates:
+        reason_parts.append(f"{len(dates)} date(s) found")
+    if money_values:
+        reason_parts.append(f"{len(money_values)} monetary reference(s) found")
+    if key_clauses:
+        reason_parts.append(f"{len(key_clauses)} important clause or fact snippet(s) extracted")
+
+    reason = (
+        "Heuristic extraction identified "
+        + ", ".join(reason_parts)
+        + "."
+        if reason_parts
+        else "Heuristic extraction found only limited document structure."
+    )
+
+    return {
+        "document_type": document_type,
+        "parties": parties,
+        "dates": dates,
+        "monetary_values": money_values,
+        "key_clauses": key_clauses,
+        "missing_elements": missing_elements,
+        "evidence_strength": evidence_strength,
+        "reason": reason,
+        "case_type": case_type,
+    }
+
+
+def _merge_document_fields(document: dict, fallback_document: dict) -> dict:
+    merged = dict(fallback_document)
+    for key, value in document.items():
+        if isinstance(value, list):
+            merged[key] = value or fallback_document.get(key, [])
+        else:
+            merged[key] = value or fallback_document.get(key)
+    return merged
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -208,6 +444,7 @@ async def process_document(
     )
 
     is_legal = _looks_like_legal_document(raw_text, case_type, case_scores)
+    heuristic_document = _heuristic_document_extraction(raw_text, filename, case_type)
 
     if not is_legal:
         return {
@@ -224,9 +461,16 @@ async def process_document(
             ),
         }
 
-    # Attach case_type to every document
-    for doc in documents_list:
-        doc["case_type"] = case_type
+    if documents_list:
+        documents_list = [
+            _merge_document_fields(
+                {**doc, "case_type": doc.get("case_type") or case_type},
+                heuristic_document,
+            )
+            for doc in documents_list
+        ]
+    else:
+        documents_list = [heuristic_document]
 
     # ── Step 4: Regex enrichment ─────────────────────────────────────────
     regex_dates = extract_dates_regex(raw_text)

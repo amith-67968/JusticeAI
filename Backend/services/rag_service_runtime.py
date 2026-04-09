@@ -58,6 +58,66 @@ _LOW_CONTEXT_PROMPTS = frozenset(
     }
 )
 
+_CONSUMER_KEYWORDS = frozenset(
+    {
+        "consumer",
+        "damaged",
+        "defective",
+        "delivery",
+        "product",
+        "refund",
+        "replacement",
+        "return",
+        "seller",
+        "warranty",
+    }
+)
+
+_WOMEN_SAFETY_KEYWORDS = frozenset(
+    {
+        "assault",
+        "bus",
+        "groped",
+        "harass",
+        "harassment",
+        "inappropriate",
+        "inappropriately",
+        "molest",
+        "molestation",
+        "outrage",
+        "touched",
+        "touching",
+        "woman",
+    }
+)
+
+_CYBER_KEYWORDS = frozenset(
+    {
+        "cyber",
+        "fraud",
+        "hack",
+        "hacked",
+        "otp",
+        "password",
+        "phishing",
+        "scam",
+        "upi",
+    }
+)
+
+_TENANCY_KEYWORDS = frozenset(
+    {
+        "deposit",
+        "evict",
+        "eviction",
+        "landlord",
+        "lease",
+        "rent",
+        "tenant",
+        "vacate",
+    }
+)
+
 _STOPWORDS = frozenset(
     {
         "a",
@@ -147,6 +207,133 @@ def _should_skip_rag(query: str) -> bool:
 
     tokens = normalised.split()
     return bool(tokens) and all(token in _GREETING_TOKENS for token in tokens) and len(tokens) <= 4
+
+
+def _build_rule_based_fallback(query: str, sources: list[str]) -> dict:
+    tokens = set(_tokenize_text(query))
+
+    if tokens & _WOMEN_SAFETY_KEYWORDS:
+        return {
+            "answer": (
+                "Based on what you described, this appears to involve unwanted sexual touching. "
+                "Under the criminal-law reference bundled with the app, Section 354 IPC / Section 74 BNS can be relevant. "
+                "You can go to the nearest police station and ask for FIR registration, and if jurisdiction is different, "
+                "you can ask for a Zero FIR and have it transferred."
+            ),
+            "relevant_laws": [
+                "Section 354 IPC / Section 74 BNS",
+                "Section 154 CrPC / Section 173 BNSS",
+            ],
+            "explanation": (
+                "The bundled criminal-law reference treats assault or criminal force on a woman with intent to outrage modesty "
+                "as a cognizable offence and also explains the FIR and Zero FIR process."
+            ),
+            "why_applicable": (
+                "Your query describes physical touching without consent in a public vehicle and asks for immediate next steps."
+            ),
+            "next_steps": [
+                "Preserve the video, route details, bus number, ticket, time, and names of any witnesses.",
+                "Go to the nearest police station and ask for FIR or Zero FIR registration.",
+                "Ask for a free copy of the FIR after registration.",
+            ],
+            "sources": sources,
+        }
+
+    if tokens & _CONSUMER_KEYWORDS:
+        return {
+            "answer": (
+                "This looks like a consumer dispute about defective goods and refund denial. "
+                "Under the Consumer Protection Act, 2019, you may seek refund, replacement, or compensation "
+                "if the product is defective or the service is deficient."
+            ),
+            "relevant_laws": [
+                "Consumer Protection Act, 2019 - Section 2(11)",
+                "Consumer Protection Act, 2019 - Section 2(12)",
+                "Consumer Protection Act, 2019 - Section 35",
+                "Consumer Protection Act, 2019 - Section 69",
+            ],
+            "explanation": (
+                "The bundled consumer-law reference defines defect and deficiency, explains who can file a complaint, "
+                "and lists refund and replacement among the available remedies."
+            ),
+            "why_applicable": (
+                "Your query mentions an online purchase, a damaged item, and refusal of refund, which fits the consumer-law pattern."
+            ),
+            "next_steps": [
+                "Keep the invoice, order screenshots, photos of the damaged item, and the refund denial messages.",
+                "Send a written complaint or legal notice asking for refund or replacement.",
+                "If unresolved, file a complaint before the appropriate Consumer Commission.",
+            ],
+            "sources": sources,
+        }
+
+    if tokens & _CYBER_KEYWORDS:
+        return {
+            "answer": (
+                "This appears to be a cyber-crime issue. The app's cyber-law references point to IT Act provisions "
+                "such as Sections 66C and 66D for identity theft and cheating by personation, depending on the facts."
+            ),
+            "relevant_laws": [
+                "IT Act, 2000 - Section 66C",
+                "IT Act, 2000 - Section 66D",
+                "IT Act, 2000 - Section 43",
+            ],
+            "explanation": (
+                "The bundled cyber-crime source maps common online fraud, OTP scams, identity theft, and phishing-style conduct "
+                "to the IT Act provisions commonly used in India."
+            ),
+            "why_applicable": (
+                "Your query contains cyber-fraud style keywords that match the offences described in the local reference file."
+            ),
+            "next_steps": [
+                "Preserve screenshots, transaction IDs, phone numbers, emails, and account details involved.",
+                "Report promptly through the cyber-crime portal or the local police station.",
+                "If money was lost, act immediately and contact the relevant reporting channels without delay.",
+            ],
+            "sources": sources,
+        }
+
+    if tokens & _TENANCY_KEYWORDS:
+        return {
+            "answer": (
+                "This appears to be a tenancy dispute. The tenancy-law reference says eviction and lease disputes usually require "
+                "legal notice and due process rather than self-help action."
+            ),
+            "relevant_laws": [
+                "Transfer of Property Act, 1882 - Section 106",
+                "Transfer of Property Act, 1882 - Section 111",
+            ],
+            "explanation": (
+                "The bundled tenancy material explains notice periods, lease termination, and the general rule that such disputes "
+                "should go through proper legal process."
+            ),
+            "why_applicable": (
+                "Your query contains common tenancy-dispute keywords covered by the local legal reference source."
+            ),
+            "next_steps": [
+                "Collect the rent agreement, receipts, notice messages, and landlord-tenant communications.",
+                "Review the notice period and termination terms in the lease.",
+                "Consider sending or responding to a formal legal notice before moving to court.",
+            ],
+            "sources": sources,
+        }
+
+    return {
+        "answer": (
+            "I could not reach the AI generation layer just now, but the retrieved legal references still suggest "
+            "your issue should be reviewed under the listed source materials below."
+        ),
+        "relevant_laws": [],
+        "explanation": (
+            "The search layer is still finding relevant legal reference documents, but a full generated explanation was unavailable."
+        ),
+        "why_applicable": "This fallback answer is based on retrieved source documents and keyword matching only.",
+        "next_steps": [
+            "Review the listed sources and gather the main facts, dates, parties, and supporting evidence.",
+            "Try the request again after the AI service is available, or consult a qualified advocate for urgent matters.",
+        ],
+        "sources": sources,
+    }
 
 
 class RAGService:
@@ -452,20 +639,7 @@ class RAGService:
 
         except Exception as exc:
             print(f"[rag] LLM error: {exc}")
-            return {
-                "answer": (
-                    "I encountered an error processing your question. "
-                    "Please try again or rephrase your query."
-                ),
-                "relevant_laws": [],
-                "explanation": "",
-                "why_applicable": "",
-                "next_steps": [
-                    "Try rephrasing your question with more details.",
-                    "Consult a qualified advocate for urgent matters.",
-                ],
-                "sources": sources,
-            }
+            return _build_rule_based_fallback(query, sources)
 
     def search(self, query: str, k: Optional[int] = None) -> list[dict]:
         """Pure retrieval without the LLM."""
