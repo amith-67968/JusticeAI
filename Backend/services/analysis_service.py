@@ -226,6 +226,7 @@ async def analyze_case(
             case_type,
             structured_data=structured_data,
             documents=documents,
+            raw_text=raw_text,
         )
 
     # 4. Normalise
@@ -262,6 +263,7 @@ def _fallback_analysis(
     case_type: str,
     structured_data: Optional[dict] = None,
     documents: Optional[list[dict]] = None,
+    raw_text: Optional[str] = None,
 ) -> dict:
     """Return a structured fallback when the LLM is unavailable."""
     def describe_count(count: int, singular_label: str, plural_label: str) -> str:
@@ -285,27 +287,67 @@ def _fallback_analysis(
     key_clauses = primary.get("key_clauses") or []
     missing_elements = [item.lower() for item in (primary.get("missing_elements") or [])]
     document_type = primary.get("document_type") or "Uploaded Document"
+    lowered_document_type = document_type.lower()
     evidence_strength = _normalize_strength(primary.get("evidence_strength", "Moderate"))
     provided_reason = str(primary.get("reason") or "").strip()
+    lowered_text = (raw_text or "").lower()
+    lowered_flags = " ".join(rule_flags).lower()
 
-    confidence = 45 + score_adj
+    formal_case_terms = (
+        "appellant",
+        "respondent",
+        "petitioner",
+        "complainant",
+        "judgment",
+        "order",
+        "coram",
+        "commission",
+        "bench",
+        "forum",
+    )
+    has_case_caption = (
+        " vs " in lowered_text
+        or " versus " in lowered_text
+        or any(" v " in str(party).lower() for party in parties)
+    )
+    has_formal_case_terms = any(term in lowered_text for term in formal_case_terms)
+    is_authoritative_record = (
+        "court order" in lowered_document_type
+        or "judgment" in lowered_document_type
+        or "award" in lowered_document_type
+        or "decree" in lowered_document_type
+        or "court_order" in lowered_flags
+        or (has_case_caption and has_formal_case_terms)
+    )
+
+    confidence = 35 + score_adj
     if evidence_strength == "Strong":
-        confidence += 20
+        confidence += 22
     elif evidence_strength == "Moderate":
         confidence += 10
     else:
         confidence -= 5
 
     if len(parties) >= 2:
-        confidence += 10
+        confidence += 12
     elif parties:
         confidence += 4
     if dates:
-        confidence += 6
+        confidence += min(10, 4 + len(dates))
     if money_values:
-        confidence += 6
+        confidence += min(10, 4 + len(money_values))
     if key_clauses:
+        confidence += min(12, 4 + (2 * len(key_clauses)))
+    if is_authoritative_record:
+        confidence += 18
+    elif has_case_caption:
         confidence += 8
+    if "payment_proof" in lowered_flags:
+        confidence += 6
+    if "fir_filed" in lowered_flags:
+        confidence += 8
+    if len(lowered_text) >= 4000:
+        confidence += 5
     if not parties:
         confidence -= 10
     if not dates:
@@ -313,9 +355,18 @@ def _fallback_analysis(
     if not key_clauses:
         confidence -= 8
 
-    confidence = max(20, min(92, confidence))
+    if (
+        evidence_strength == "Strong"
+        and len(parties) >= 2
+        and dates
+        and key_clauses
+        and is_authoritative_record
+    ):
+        confidence = 100
+    else:
+        confidence = max(20, min(100, confidence))
 
-    if confidence >= 75:
+    if confidence >= 80:
         case_strength = "Strong"
     elif confidence >= 45:
         case_strength = "Moderate"
@@ -334,6 +385,8 @@ def _fallback_analysis(
         summary_parts.append(f"This appears to be a {case_type.lower()} matter")
     else:
         summary_parts.append("The uploaded material appears to describe a legal dispute")
+    if is_authoritative_record:
+        summary_parts.append(" supported by a formal case record")
 
     factual_parts: list[str] = []
     if len(parties) >= 2:
@@ -391,7 +444,9 @@ def _fallback_analysis(
     if not key_clauses:
         weak_points.append("Key clauses or factual statements were not extracted cleanly.")
     if not weak_points:
-        weak_points.append("Automated review used fallback scoring because the live AI analysis was unavailable.")
+        weak_points.append(
+            "Live AI analysis was unavailable, so this score is based on enhanced document heuristics."
+        )
 
     next_steps: list[str] = []
     lowered_case_type = case_type.lower()
