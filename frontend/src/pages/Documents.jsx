@@ -1,3 +1,6 @@
+export { default } from './DocumentsPage';
+
+/*
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Filter, Search, PlusCircle, FolderOpen, User, ArrowLeft } from 'lucide-react';
@@ -151,3 +154,4 @@ const Documents = () => {
 };
 
 export default Documents;
+*/

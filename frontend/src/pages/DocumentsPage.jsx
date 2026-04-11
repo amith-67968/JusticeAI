@@ -171,7 +171,7 @@ const DocumentsPage = () => {
   };
 
   return (
-    <div className="page-container flex h-screen flex-col overflow-hidden">
+    <div className="page-container flex min-h-dvh flex-col overflow-hidden bg-slate-50">
       <main className="flex-1 overflow-y-auto">
         <div className="sticky top-0 z-40 mb-6 border-b border-slate-200 bg-white/95 backdrop-blur">
           <div className="flex w-full flex-col gap-3 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
@@ -244,7 +244,7 @@ const DocumentsPage = () => {
           </div>
         </div>
 
-        <div className="mx-auto flex w-full max-w-(--max-w-app) flex-col px-6 pb-10 lg:px-12">
+        <div className="mx-auto flex w-full max-w-(--max-w-app) flex-col px-4 pb-10 sm:px-6 lg:px-12">
 
           {error && (
             <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -256,7 +256,7 @@ const DocumentsPage = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-16 text-center"
+              className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center sm:p-16"
             >
               <h3 className="mb-2 text-xl font-bold text-slate-900">Loading documents...</h3>
               <p className="max-w-sm text-text-secondary">
@@ -282,7 +282,7 @@ const DocumentsPage = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-16 text-center"
+              className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center sm:p-16"
             >
               <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-200 text-slate-500">
                 <FolderOpen size={40} />
