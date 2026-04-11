@@ -118,18 +118,18 @@ const CaseAnalyzerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex flex-col pt-6">
-      <div className="px-6 mb-6 flex items-start gap-4">
-        <div>
-          <div className="flex items-start gap-4">
+    <div className="flex min-h-dvh flex-col bg-linear-to-br from-gray-50 to-gray-100">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8">
+        <div className="mb-6 flex items-start gap-4">
+          <div className="flex items-start gap-3 sm:gap-4">
             <button
               onClick={() => navigate('/dashboard')}
-              className="p-2 rounded-full bg-white shadow hover:shadow-md transition-all text-gray-500 hover:text-gray-900"
+              className="rounded-full bg-white p-2 text-gray-500 shadow transition-all hover:text-gray-900 hover:shadow-md"
             >
               <ArrowLeft size={20} />
             </button>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-1">Case Analyzer</h1>
+            <div className="min-w-0">
+              <h1 className="mb-1 text-2xl font-bold text-gray-900 sm:text-3xl">Case Analyzer</h1>
               <p className="text-gray-500 max-w-2xl mt-1">
                 Upload a legal document to score case strength, case difficulty, and document evidence.
               </p>
@@ -138,7 +138,7 @@ const CaseAnalyzerPage = () => {
         </div>
       </div>
 
-      <div className="flex justify-center mt-10 px-4 w-full">
+      <div className="mt-4 flex w-full justify-center px-4 pb-8 sm:mt-6 sm:px-6 lg:px-8 lg:pb-12">
         <AnimatePresence mode="wait">
           {!uploadResult && !analysisResult && !isAnalyzing ? (
             <motion.div
@@ -146,7 +146,7 @@ const CaseAnalyzerPage = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-              className="w-full max-w-4xl bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-300 px-8 py-10 md:px-12 md:py-12 flex flex-col items-center text-center"
+              className="flex w-full max-w-4xl flex-col items-center rounded-3xl bg-white px-4 py-6 text-center shadow-lg transition-shadow duration-300 hover:shadow-xl sm:px-8 sm:py-10 md:px-12 md:py-12"
             >
               {!file ? (
                 <div
@@ -155,17 +155,17 @@ const CaseAnalyzerPage = () => {
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`w-full min-h-85 md:min-h-95 border-2 border-dashed rounded-2xl px-10 py-14 md:px-14 md:py-16 flex flex-col items-center justify-center cursor-pointer transition-colors ${
+                  className={`flex w-full min-h-72 flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 transition-colors sm:min-h-85 sm:px-10 sm:py-14 md:min-h-95 md:px-14 md:py-16 ${
                     isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400 bg-gray-50/50'
                   }`}
                 >
                   <div className="bg-blue-100 text-blue-600 rounded-full p-5 mb-5">
                     <UploadCloud size={40} />
                   </div>
-                  <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                  <h3 className="mb-3 text-xl font-semibold text-gray-800 sm:text-2xl">
                     Click or drag file to this area to upload
                   </h3>
-                  <p className="text-base text-gray-500 mt-1">
+                  <p className="mt-1 text-sm text-gray-500 sm:text-base">
                     Supports PDF, TXT, and images up to 20 MB.
                   </p>
                   <p className="text-sm text-gray-400 mt-3">
@@ -180,12 +180,12 @@ const CaseAnalyzerPage = () => {
                   />
                 </div>
               ) : (
-                <div className="w-full min-h-75 border-2 border-gray-100 rounded-2xl p-10 md:p-12 flex flex-col items-center justify-center bg-gray-50/30">
+                <div className="flex w-full min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-gray-100 bg-gray-50/30 p-6 sm:min-h-75 sm:p-10 md:p-12">
                   <div className="bg-green-100 text-green-600 rounded-full p-5 mb-5">
                     <FileText size={40} />
                   </div>
-                  <h3 className="text-2xl text-gray-800 font-medium mb-2 truncate max-w-2xl">{file.name}</h3>
-                  <div className="flex items-center gap-1.5 text-green-500 text-base font-medium">
+                  <h3 className="mb-2 max-w-full truncate text-xl font-medium text-gray-800 sm:max-w-2xl sm:text-2xl">{file.name}</h3>
+                  <div className="flex items-center gap-1.5 text-sm font-medium text-green-500 sm:text-base">
                     <CheckCircle size={16} /> Ready for analysis
                   </div>
                   <button
@@ -211,10 +211,10 @@ const CaseAnalyzerPage = () => {
                 whileTap={file ? { scale: 0.98 } : {}}
                 onClick={handleAnalyze}
                 disabled={!file}
-                className={`mt-8 w-full py-4 rounded-2xl text-lg font-medium transition-all shadow-md ${
-                  file
-                    ? 'bg-gray-900 text-white hover:bg-gray-800'
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed shadow-none'
+              className={`mt-8 w-full rounded-2xl py-4 text-base font-medium transition-all shadow-md sm:text-lg ${
+                file
+                  ? 'bg-gray-900 text-white hover:bg-gray-800'
+                  : 'bg-gray-200 text-gray-500 cursor-not-allowed shadow-none'
                 }`}
               >
                 Start Legal Analysis
@@ -226,7 +226,7 @@ const CaseAnalyzerPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center py-20"
+              className="flex flex-col items-center justify-center px-4 py-16 text-center sm:py-20"
             >
               <Loader2 size={48} className="text-gray-900 animate-spin mb-6" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Document...</h2>
@@ -237,7 +237,7 @@ const CaseAnalyzerPage = () => {
               key="error-card"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8"
+              className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg sm:p-8"
             >
               <div className="flex items-center gap-3 text-rose-600 mb-4">
                 <AlertTriangle size={26} />
@@ -258,18 +258,18 @@ const CaseAnalyzerPage = () => {
               key="results-card"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-full max-w-5xl flex flex-col pb-12"
+              className="flex w-full max-w-5xl flex-col pb-4 sm:pb-12"
             >
               {/* ── Results Header ── */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-6 mb-8 flex flex-wrap items-center justify-between gap-4">
+              <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white px-5 py-5 shadow-sm sm:px-8 sm:py-6 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-1">Analysis Results</h2>
-                  <div className="flex items-center gap-2 text-gray-500 text-sm">
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
                     <FileText size={14} className="shrink-0" />
-                    <span className="truncate max-w-xs md:max-w-md">{file?.name}</span>
+                    <span className="max-w-[12rem] truncate sm:max-w-xs md:max-w-md">{file?.name}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-700">
                     Case Type: {uploadResult?.structured_data?.case_type || 'Unknown'}
                   </span>
@@ -292,9 +292,9 @@ const CaseAnalyzerPage = () => {
               )}
 
               {/* ── Three Metric Cards ── */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full mb-8">
+              <div className="mb-8 grid w-full grid-cols-1 gap-5 md:grid-cols-3">
                 {/* Case Strength */}
-                <div className="bg-green-50/60 border border-green-100 rounded-2xl p-6 relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-2xl border border-green-100 bg-green-50/60 p-5 sm:p-6">
                   <div className="absolute top-4 right-4 text-green-200">
                     <ShieldCheck size={48} strokeWidth={1.2} />
                   </div>
@@ -311,7 +311,7 @@ const CaseAnalyzerPage = () => {
                 </div>
 
                 {/* Case Difficulty */}
-                <div className="bg-amber-50/60 border border-amber-100 rounded-2xl p-6 relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-2xl border border-amber-100 bg-amber-50/60 p-5 sm:p-6">
                   <div className="absolute top-4 right-4 text-amber-200">
                     <AlertTriangle size={48} strokeWidth={1.2} />
                   </div>
@@ -328,7 +328,7 @@ const CaseAnalyzerPage = () => {
                 </div>
 
                 {/* Primary Evidence */}
-                <div className="bg-blue-50/60 border border-blue-100 rounded-2xl p-6 relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-blue-50/60 p-5 sm:p-6">
                   <div className="absolute top-4 right-4 text-blue-200">
                     <FileSearch size={48} strokeWidth={1.2} />
                   </div>
@@ -347,8 +347,8 @@ const CaseAnalyzerPage = () => {
               </div>
 
               {/* ── Strong & Weak Points ── */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mb-5">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="mb-5 grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
                   <h3 className="text-base font-bold text-gray-900 mb-4">Strong Points</h3>
                   <ul className="space-y-3">
                     {(analysisResult?.strong_points || []).map((item, idx) => (
@@ -360,7 +360,7 @@ const CaseAnalyzerPage = () => {
                   </ul>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
                   <h3 className="text-base font-bold text-gray-900 mb-4">Weak Points</h3>
                   <ul className="space-y-3">
                     {(analysisResult?.weak_points || []).map((item, idx) => (
@@ -374,8 +374,8 @@ const CaseAnalyzerPage = () => {
               </div>
 
               {/* ── Next Steps & Document Analysis ── */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
                   <h3 className="text-base font-bold text-gray-900 mb-4">Next Steps</h3>
                   <ul className="space-y-3">
                     {(analysisResult?.next_steps || []).map((step, idx) => (
@@ -387,12 +387,12 @@ const CaseAnalyzerPage = () => {
                   </ul>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
                   <h3 className="text-base font-bold text-gray-900 mb-4">Document Analysis</h3>
                   <div className="space-y-4">
                     {(analysisResult?.document_analysis || []).map((doc, idx) => (
-                      <div key={idx} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <div className="flex items-center justify-between mb-2">
+                      <div key={idx} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                        <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                           <span className="font-semibold text-sm text-gray-800">{doc.document_type}</span>
                           <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
                             doc.evidence_strength === 'Strong' ? 'text-green-700 bg-green-100' :

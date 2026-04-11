@@ -1,3 +1,6 @@
+export { default } from './ChatPage';
+
+/*
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ArrowLeft } from 'lucide-react';
@@ -127,3 +130,4 @@ const Chat = () => {
 };
 
 export default Chat;
+*/
