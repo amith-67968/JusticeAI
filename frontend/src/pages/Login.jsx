@@ -28,11 +28,11 @@ export default function Login() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-br from-black via-gray-900 to-blue-900 px-4 py-10">
+    <div className="relative flex min-h-dvh items-start justify-center overflow-hidden bg-linear-to-br from-black via-gray-900 to-blue-900 px-4 py-20 sm:items-center sm:py-10">
       
       <Link
         to="/"
-        className="absolute left-6 top-6 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/20"
+        className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/20 sm:left-6 sm:top-6"
       >
         <ArrowLeft size={16} />
         Back to landing
@@ -42,20 +42,20 @@ export default function Login() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-8 w-full max-w-md relative z-10"
+        className="relative z-10 w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-xl sm:p-8"
       >
         <motion.div
            initial={{ opacity: 0, y: -20 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ delay: 0.2 }}
         >
-          <h2 className="text-3xl font-semibold text-white text-center tracking-tight">Log in</h2>
+          <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">Log in</h2>
           <p className="text-gray-300 text-sm text-center mt-2">
             Welcome back to JusticeAI. Please enter your details.
           </p>
         </motion.div>
 
-        <form onSubmit={handleLogin} className="mt-8 space-y-5">
+        <form onSubmit={handleLogin} className="mt-6 space-y-5 sm:mt-8">
           {error && (
             <div className="rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
               {error}
@@ -117,7 +117,7 @@ export default function Login() {
               transition={{ delay: 0.5 }}
               disabled={loading}
               type="submit"
-              className="bg-white/20 hover:bg-white/30 text-white py-3 rounded-xl w-full mt-4 transition shadow-lg font-medium"
+              className="mt-4 w-full rounded-xl bg-white/20 py-3 font-medium text-white shadow-lg transition hover:bg-white/30"
             >
               {loading ? "Logging in..." : "Log in"}
             </motion.button>
@@ -129,7 +129,7 @@ export default function Login() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="bg-white/10 hover:bg-white/20 text-white py-2 rounded-xl w-full mt-3 flex items-center justify-center gap-2 transition"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 py-2 text-white transition hover:bg-white/20"
             >
                <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
