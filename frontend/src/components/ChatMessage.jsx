@@ -23,19 +23,19 @@ const ChatMessage = ({ message }) => {
     <motion.div
       initial={{ opacity: 0, x: isAI ? -20 : 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className={`flex w-full ${isAI ? "justify-start" : "justify-end"} mb-6`}
+      className={`mb-4 flex w-full ${isAI ? "justify-start" : "justify-end"} sm:mb-6`}
     >
-      <div className={`flex gap-3 max-w-[75%] ${isAI ? 'flex-row' : 'flex-row-reverse'}`}>
+      <div className={`flex max-w-[88%] gap-2.5 sm:max-w-[75%] sm:gap-3 ${isAI ? 'flex-row' : 'flex-row-reverse'}`}>
 
         {/* Avatar */}
         {isAI && (
-          <div className="shrink-0 w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mt-auto mb-1 border border-slate-300">
+          <div className="mt-auto mb-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-slate-200 text-slate-600">
             <Bot size={18} />
           </div>
         )}
 
         {/* Bubble */}
-        <div className={`p-4 shadow-sm ${isAI
+        <div className={`p-3.5 shadow-sm sm:p-4 ${isAI
             ? 'bg-slate-100 text-slate-900 rounded-2xl rounded-bl-md'
             : 'bg-blue-600 text-white rounded-2xl rounded-br-md ml-auto'
           }`}>

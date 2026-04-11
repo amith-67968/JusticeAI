@@ -10,11 +10,11 @@ const DocumentCard = ({ doc, onDelete, onDownload, onPreview, isDeleting = false
       whileHover={{ y: -4, borderColor: '#3b82f6' }}
       className="glass-panel p-5 flex flex-col justify-between transition-colors border-slate-200 hover:bg-slate-50 group shadow-sm bg-white"
     >
-      <div className="flex justify-between items-start mb-4">
+      <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="w-12 h-12 rounded-xl bg-accent-primary/20 text-accent-primary flex items-center justify-center">
           <FileText size={24} />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
           {doc.strength && (
             <div className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-700">
               {doc.strength}
@@ -35,9 +35,9 @@ const DocumentCard = ({ doc, onDelete, onDownload, onPreview, isDeleting = false
         </p>
       </div>
 
-      <div className="mt-auto border-t border-slate-200 pt-4 flex flex-col gap-3">
-          <div className="flex items-center gap-4 text-xs text-text-tertiary">
-          <div className="flex items-center gap-1.5">
+      <div className="mt-auto flex flex-col gap-3 border-t border-slate-200 pt-4">
+        <div className="flex flex-col gap-2 text-xs text-text-tertiary sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex items-center gap-1.5 break-all">
             <Calendar size={14} />
             {new Date(doc.date).toLocaleDateString()}
           </div>
@@ -47,7 +47,7 @@ const DocumentCard = ({ doc, onDelete, onDownload, onPreview, isDeleting = false
           </div>
         </div>
         
-        <div className="flex items-center justify-between mt-2">
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
           <div className="flex gap-2">
             <button
               onClick={() => onPreview(doc.id)}
