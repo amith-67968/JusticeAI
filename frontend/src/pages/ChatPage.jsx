@@ -200,9 +200,9 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <div className="flex items-center px-6 py-4 border-b border-slate-200 bg-white shrink-0">
-        <div className="flex items-center gap-4">
+    <div className="flex min-h-dvh flex-col bg-gray-50">
+      <div className="shrink-0 border-b border-slate-200 bg-white">
+        <div className="flex w-full items-center gap-3 px-4 py-4 sm:px-6">
           <button
             onClick={() => navigate('/dashboard')}
             className="text-slate-500 hover:text-slate-900 transition-colors"
@@ -210,14 +210,14 @@ const ChatPage = () => {
           >
             <ArrowLeft size={20} />
           </button>
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">JusticeAI Chat</h1>
+          <div className="min-w-0">
+            <h1 className="text-lg font-bold text-slate-900 sm:text-xl">JusticeAI Chat</h1>
             <p className="text-xs text-slate-500">{user?.name || 'Current session'}</p>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col overflow-y-auto px-3 py-4 sm:px-6 sm:py-6">
         <AnimatePresence initial={false}>
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
@@ -227,15 +227,15 @@ const ChatPage = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex w-full justify-start mb-6"
+              className="mb-4 flex w-full justify-start sm:mb-6"
             >
-              <div className="flex gap-3 max-w-[70%] items-end">
-                <div className="shrink-0 w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center border border-slate-300">
+              <div className="flex max-w-[88%] items-end gap-2.5 sm:max-w-[70%] sm:gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-slate-200 text-slate-600">
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse"></span>
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse delay-75 mx-0.5"></span>
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse delay-150"></span>
                 </div>
-                <div className="p-4 rounded-2xl rounded-bl-md bg-white text-slate-500 text-sm flex items-center shadow-sm">
+                <div className="flex items-center rounded-2xl rounded-bl-md bg-white p-3.5 text-sm text-slate-500 shadow-sm sm:p-4">
                   Reviewing relevant laws...
                 </div>
               </div>
@@ -245,8 +245,8 @@ const ChatPage = () => {
         <div ref={messagesEndRef} className="h-4" />
       </div>
 
-      <div className="p-4 bg-white border-t border-slate-200 shrink-0 flex justify-center shadow-sm">
-        <div className="w-full max-w-3xl flex items-center gap-3">
+      <div className="shrink-0 border-t border-slate-200 bg-white p-3 shadow-sm sm:p-4">
+        <div className="mx-auto flex w-full max-w-5xl items-center gap-2 sm:gap-3">
           <input
             type="text"
             value={input}
@@ -258,13 +258,13 @@ const ChatPage = () => {
               }
             }}
             placeholder="Ask about your case, law section, or uploaded document..."
-            className="flex-1 border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-slate-900 bg-white shadow-sm"
+            className="min-w-0 flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-slate-900 outline-none shadow-sm transition-all focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
 
           <button
             onClick={handleSend}
             disabled={!input.trim() || isTyping}
-            className="w-12 h-12 bg-blue-600 text-white flex flex-col items-center justify-center rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0 shadow-sm"
+            className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             title="Send Message"
           >
             <Send size={20} className="mr-0.5 mt-0.5" />
