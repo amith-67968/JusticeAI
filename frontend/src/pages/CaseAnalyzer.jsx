@@ -1,3 +1,6 @@
+export { default } from './CaseAnalyzerPage';
+
+/*
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, UploadCloud, FileText, Loader2, CheckCircle, ShieldCheck, BarChart, FileSearch } from 'lucide-react';
@@ -223,3 +226,4 @@ const CaseAnalyzer = () => {
 };
 
 export default CaseAnalyzer;
+*/

@@ -23,7 +23,7 @@ const LawyerCards = ({ lawyers = [], linkedinUrl = '', caseTypes = [], isLoading
   /* ── Loading State ──────────────────────────────────────────────────── */
   if (isLoading) {
     return (
-      <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm md:col-span-2 flex items-center gap-3">
+      <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:col-span-2">
         <Loader2 size={16} className="animate-spin text-amber-500" />
         <span className="text-xs text-slate-500">Finding lawyers near you…</span>
       </div>
@@ -34,10 +34,10 @@ const LawyerCards = ({ lawyers = [], linkedinUrl = '', caseTypes = [], isLoading
   if (!lawyers.length && !linkedinUrl) return null;
 
   return (
-    <div className="md:col-span-2 space-y-3">
+    <div className="space-y-3 md:col-span-2">
 
       {/* ── Section Header ──────────────────────────────────────────── */}
-      <div className="flex items-center gap-2 text-amber-600 font-semibold text-sm">
+      <div className="flex items-center gap-2 text-sm font-semibold text-amber-600">
         <Users size={14} />
         Recommended Lawyers Near You
       </div>
@@ -58,7 +58,7 @@ const LawyerCards = ({ lawyers = [], linkedinUrl = '', caseTypes = [], isLoading
 
       {/* ── Lawyer Cards ────────────────────────────────────────────── */}
       {lawyers.length > 0 ? (
-        <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {lawyers.map((lawyer, idx) => (
             <motion.div
               key={idx}
@@ -92,7 +92,7 @@ const LawyerCards = ({ lawyers = [], linkedinUrl = '', caseTypes = [], isLoading
               )}
 
               {/* Actions */}
-              <div className="flex items-center gap-2 mt-auto">
+              <div className="mt-auto flex flex-wrap items-center gap-2">
                 {lawyer.maps_url && (
                   <a
                     href={lawyer.maps_url}
@@ -129,7 +129,7 @@ const LawyerCards = ({ lawyers = [], linkedinUrl = '', caseTypes = [], isLoading
           href={linkedinUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-xl bg-[#0A66C2] text-white hover:bg-[#004182] transition-colors shadow-sm"
+          className="mt-1 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#0A66C2] px-4 py-2 text-center text-xs font-medium text-white shadow-sm transition-colors hover:bg-[#004182] sm:w-auto"
         >
           <LinkedInIcon size={14} />
           Find more lawyers on LinkedIn

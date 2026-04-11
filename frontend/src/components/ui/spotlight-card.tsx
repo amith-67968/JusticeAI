@@ -91,7 +91,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
       backgroundAttachment: 'fixed',
       border: 'var(--border-size) solid var(--backup-border)',
       position: 'relative' as const,
-      touchAction: 'none' as const,
+      touchAction: onClick ? ('manipulation' as const) : ('auto' as const),
       cursor: onClick ? 'pointer' : 'default',
     };
 
