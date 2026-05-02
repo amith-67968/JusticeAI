@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>JusticeAI - Dashboard</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#f7f9fb",
+                    "tertiary": "#000000",
+                    "on-tertiary-fixed-variant": "#5d4124",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#2d3133",
+                    "on-primary-container": "#76849f",
+                    "secondary": "#0051d5",
+                    "secondary-container": "#316bf3",
+                    "on-tertiary-container": "#9f7d5b",
+                    "on-tertiary-fixed": "#2b1701",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#39475f",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#0d1c32",
+                    "background": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "primary": "#000000",
+                    "on-secondary-container": "#fefcff",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-container": "#2b1701",
+                    "surface-tint": "#515f78",
+                    "tertiary-fixed": "#ffdcbd",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#44474d",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#b9c7e4",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "surface-container-high": "#e6e8ea",
+                    "tertiary-fixed-dim": "#e7bf99",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "outline-variant": "#c5c6cd",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed": "#dbe1ff",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed": "#0d1c32",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "on-secondary-fixed": "#00174b",
+                    "primary-fixed": "#d6e3ff",
+                    "surface-container": "#eceef0",
+                    "on-error": "#ffffff",
+                    "outline": "#75777e",
+                    "on-background": "#191c1e",
+                    "primary-fixed-dim": "#b9c7e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "xxl": "80px",
+                    "unit": "4px",
+                    "xs": "4px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "lg": "24px",
+                    "xl": "48px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "h3": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h1": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "h2": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "h3": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.7", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h2": ["36px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: theme('colors.surface-bright'); color: theme('colors.primary'); }
+        /* Ensuring strict component mapping handling */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid theme('colors.outline-variant');
+            box-shadow: 0 4px 6px -1px rgba(10, 25, 47, 0.03), 0 2px 4px -1px rgba(10, 25, 47, 0.02);
+        }
+        .ai-gradient-border {
+            position: relative;
+        }
+        .ai-gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, theme('colors.secondary'), #0A192F);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- JSON Component: SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-64 border-r bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl text-slate-900 dark:text-slate-50 font-sans antialiased tracking-tight border-r border-slate-200 dark:border-slate-800 shadow-sm flex flex-col p-4 gap-2 z-50">
+<!-- Header -->
+<div class="px-4 py-6 mb-4">
+<h1 class="text-xl font-bold tracking-tighter text-slate-900 dark:text-white">JusticeAI</h1>
+<p class="text-xs font-medium text-slate-500 mt-1">Legal Intelligence</p>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-1">
+<!-- Active Item: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors duration-200 active:scale-95 duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+                AI Legal Chat
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors duration-200 active:scale-95 duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Case Analyzer
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors duration-200 active:scale-95 duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+                Documents
+            </a>
+</div>
+<!-- Footer / CTA -->
+</nav>
+<!-- Main Content Wrapper (offset by sidebar width) -->
+<div class="pl-64 flex flex-col min-h-screen">
+<!-- JSON Component: TopNavBar -->
+<header class="sticky top-0 z-40 w-full bg-white/70 dark:bg-slate-950/70 backdrop-blur-md text-slate-900 dark:text-slate-50 font-sans text-sm border-b border-slate-200 dark:border-slate-800 flat flex items-center justify-between h-16 px-8">
+<!-- Left Side: Search & Links -->
+<div class="flex items-center gap-8">
+<!-- Search (on_left) -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-slate-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all" placeholder="Search cases, documents..." type="text"/>
+</div>
+<!-- Links -->
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer" href="#">Case Search</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer" href="#">Legal Library</a>
+</nav>
+</div>
+<!-- Right Side: Actions -->
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 bg-secondary text-white rounded-full font-medium hover:bg-secondary-container transition-colors shadow-sm text-sm">
+                    New Case
+                </button>
+<div class="flex items-center gap-3 border-l border-slate-200 pl-4 ml-2">
+<button class="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer p-1">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer p-1">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="flex-1 p-xl mx-auto w-full max-w-container-max flex flex-col gap-xl">
+<!-- Hero Section -->
+<section class="flex flex-col gap-2">
+<h2 class="font-h2 text-h2 text-primary tracking-tight">Welcome back, Amith 👋</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Manage legal analysis, case reviews, and AI-powered legal assistance from one place.
+                </p>
+</section>
+<!-- Stats Row -->
+<!-- Feature Cards Grid (Bento Style) -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Feature 1: AI Chat (Highlighted) -->
+<div class="glass-card rounded-xl p-8 flex flex-col justify-between ai-gradient-border bg-white shadow-md relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+<div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl">psychology</span>
+</div>
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" style='font-variation-settings: "FILL" 1;'>chat_spark</span>
+</div>
+<h3 class="font-h3 text-h3 text-primary mb-2">AI Legal Chat</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 leading-relaxed">
+                            Talk through legal issues, brainstorm defense strategies, and get instant citations from our specialized legal language model.
+                        </p>
+</div>
+<button class="relative z-10 w-fit px-6 py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-opacity-90 transition-all">
+                        Open Chat <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Feature 2: Case Analyzer -->
+<div class="glass-card rounded-xl p-8 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+<div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-surface">troubleshoot</span>
+</div>
+<h3 class="font-h3 text-h3 text-primary mb-2">Case Analyzer</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 leading-relaxed">
+                            Upload complex dockets and let the AI extract key dates, identify precedents, and highlight potential risks automatically.
+                        </p>
+</div>
+<button class="w-fit px-6 py-3 border border-outline-variant text-primary rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container transition-all">
+                        Analyze Case
+                    </button>
+</div>
+<!-- Feature 3: Documents -->
+<div class="glass-card rounded-xl p-8 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+<div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-surface">folder_managed</span>
+</div>
+<h3 class="font-h3 text-h3 text-primary mb-2">Documents</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 leading-relaxed">
+                            Browse your secure legal library. Fast semantic search across thousands of contracts, briefs, and filings.
+                        </p>
+</div>
+<button class="w-fit px-6 py-3 border border-outline-variant text-primary rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container transition-all">
+                        Open Library
+                    </button>
+</div>
+</section>
+<!-- Lower Section: Two Columns -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Left: Recent Activity (Takes up 2 columns) -->
+<div class="lg:col-span-2 glass-card rounded-xl p-8 flex flex-col">
+<div class="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant">
+<h3 class="font-h3 text-h3 text-primary">Recent Activity</h3>
+<button class="font-label-sm text-label-sm text-secondary hover:underline">View All</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Activity Item 1 -->
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]">upload_file</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary">NDA_Review_v2.pdf uploaded</p>
+<p class="font-body-sm text-sm text-on-surface-variant mt-0.5">Added to Case: TechCorp Merger</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline shrink-0">2h ago</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-[20px]">fact_check</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary">Case Analysis completed</p>
+<p class="font-body-sm text-sm text-on-surface-variant mt-0.5">AI extracted 14 key obligations from Smith vs Jones docket.</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline shrink-0">5h ago</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-fixed text-[20px]">record_voice_over</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary">Legal Consultation session</p>
+<p class="font-body-sm text-sm text-on-surface-variant mt-0.5">Chat session regarding IP infringement precedents.</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline shrink-0">Yesterday</span>
+</div>
+</div>
+</div>
+<!-- Right: Quick Actions -->
+<div class="glass-card rounded-xl p-8 flex flex-col">
+<div class="mb-6 pb-4 border-b border-outline-variant">
+<h3 class="font-h3 text-h3 text-primary">Quick Actions</h3>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full flex items-center gap-3 p-4 border border-outline-variant rounded-lg hover:border-secondary hover:bg-surface-container-low transition-all text-left group">
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors">note_add</span>
+<span class="font-label-md text-label-md text-primary">Upload New Case File</span>
+</button>
+<button class="w-full flex items-center gap-3 p-4 border border-outline-variant rounded-lg hover:border-secondary hover:bg-surface-container-low transition-all text-left group">
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors">smart_toy</span>
+<span class="font-label-md text-label-md text-primary">Start AI Consultation</span>
+</button>
+<button class="w-full flex items-center gap-3 p-4 border border-outline-variant rounded-lg hover:border-secondary hover:bg-surface-container-low transition-all text-left group">
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors">bookmarks</span>
+<span class="font-label-md text-label-md text-primary">View Saved Precedents</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

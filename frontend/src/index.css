@@ -48,6 +48,29 @@
   .page-container {
     @apply relative w-full min-h-dvh overflow-y-auto;
   }
+
+  /* Stitch Custom Classes */
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid theme('colors.outline-variant');
+    box-shadow: 0 4px 6px -1px rgba(10, 25, 47, 0.03), 0 2px 4px -1px rgba(10, 25, 47, 0.02);
+  }
+  .ai-gradient-border {
+    position: relative;
+  }
+  .ai-gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, theme('colors.secondary'), #0A192F);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
 }
 
 /* Custom Scrollbar */
