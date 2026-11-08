@@ -292,21 +292,7 @@ const DashboardPage = () => {
               className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 lg:hidden"
             >
               <Menu size={20} />
-            </button>
-
-            <div className="relative hidden max-w-md flex-1 sm:block">
-              <Search className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" size={17} />
-              <input
-                type="text"
-                placeholder="Search your library or ask a question…"
-                className="rounded-full border-slate-200/80 bg-white/70 py-2.5 pl-11 text-sm"
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') navigate('/chat');
-                }}
-              />
-            </div>
-
-            <div className="ml-auto flex items-center gap-2">
+            </button><div className="ml-auto flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => navigate('/analyzer')}
@@ -368,6 +354,14 @@ const DashboardPage = () => {
                 >
                   Ask the assistant
                   <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/analyzer')}
+                  className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/70 px-6 py-3 text-sm font-semibold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-100 hover:shadow-md"
+                >
+                  <UploadCloud size={16} />
+                  New analysis
                 </button>
                 <button
                   type="button"
@@ -489,7 +483,7 @@ const DashboardPage = () => {
                   <li key={prompt}>
                     <button
                       type="button"
-                      onClick={() => navigate('/chat')}
+                      onClick={() => navigate('/chat', { state: { draft: prompt } })}
                       className="group flex w-full items-center justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white/70 px-5 py-4 text-left text-sm text-slate-700 transition hover:border-blue-200 hover:bg-blue-50/60"
                     >
                       {prompt}
