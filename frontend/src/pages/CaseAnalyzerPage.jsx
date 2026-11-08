@@ -266,7 +266,7 @@ const CaseAnalyzerPage = () => {
                   <h2 className="text-2xl font-bold text-gray-900 mb-1">Analysis Results</h2>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <FileText size={14} className="shrink-0" />
-                    <span className="max-w-[12rem] truncate sm:max-w-xs md:max-w-md">{file?.name}</span>
+                    <span className="max-w-48 truncate sm:max-w-xs md:max-w-md">{file?.name}</span>
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">

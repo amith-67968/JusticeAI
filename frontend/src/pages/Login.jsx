@@ -34,7 +34,7 @@ export default function Login() {
     <div className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-20">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="animate-drift-a absolute -top-24 -left-20 h-96 w-96 rounded-full bg-blue-200/45 blur-3xl" />
-        <div className="animate-drift-b absolute -right-16 bottom-0 h-[26rem] w-[26rem] rounded-full bg-violet-200/40 blur-3xl" />
+        <div className="animate-drift-b absolute -right-16 bottom-0 h-104 w-104 rounded-full bg-violet-200/40 blur-3xl" />
         <div
           className="absolute inset-0 opacity-40"
           style={{

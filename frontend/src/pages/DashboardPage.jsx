@@ -13,7 +13,6 @@ import {
   Menu,
   MessageSquare,
   Scale,
-  Search,
   ShieldCheck,
   Sparkles,
   UploadCloud,
@@ -240,8 +239,8 @@ const DashboardPage = () => {
   return (
     <div className="relative min-h-dvh w-full overflow-x-clip bg-bg-primary">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="animate-drift-a absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-blue-200/40 blur-3xl" />
-        <div className="animate-drift-b absolute top-1/3 -right-28 h-[30rem] w-[30rem] rounded-full bg-violet-200/35 blur-3xl" />
+        <div className="animate-drift-a absolute -top-32 -left-24 h-112 w-md rounded-full bg-blue-200/40 blur-3xl" />
+        <div className="animate-drift-b absolute top-1/3 -right-28 h-120 w-120 rounded-full bg-violet-200/35 blur-3xl" />
       </div>
 
       {/* Desktop sidebar */}
@@ -292,7 +291,7 @@ const DashboardPage = () => {
               className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 lg:hidden"
             >
               <Menu size={20} />
-            </button><div className="ml-auto flex items-center gap-2">
+            </button>`r`n            <div className="ml-auto flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => navigate('/analyzer')}
