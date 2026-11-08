@@ -1,0 +1,1 @@
+"""JusticeAI — Shared utility modules."""

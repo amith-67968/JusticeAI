@@ -1,0 +1,145 @@
+{
+  "endpoints": [
+    {
+      "name": "Chat",
+      "method": "POST",
+      "path": "/chat/",
+      "content_type": "application/json",
+      "example_request": {
+        "user_query": "My landlord is refusing to return my security deposit of Rs. 50,000. What are my legal options?",
+        "session_id": null
+      },
+      "example_response": {
+        "answer": "Under the Transfer of Property Act, 1882 and applicable state rent control laws, your landlord is legally obligated to return your security deposit upon vacating the premises, subject to deductions for unpaid rent or damages beyond normal wear and tear...",
+        "relevant_laws": [
+          "Transfer of Property Act, 1882 — Section 108",
+          "Model Tenancy Act, 2021 — Security Deposit provisions"
+        ],
+        "explanation": "The security deposit is meant to cover potential damages or unpaid rent. If no legitimate deductions exist, the landlord must return the full amount within a reasonable time after you vacate.",
+        "why_applicable": "Your dispute involves a landlord-tenant relationship and recovery of a security deposit, which falls under tenancy law and civil remedies.",
+        "next_steps": [
+          "Send a formal legal notice to the landlord demanding return of Rs. 50,000 within 15 days.",
+          "If unresolved, file a case in the Rent Controller's court or civil court for recovery of the deposit with interest.",
+          "Consult a qualified advocate for formal legal advice specific to your state's rent control act."
+        ],
+        "sources": [
+          "rent_tenancy_laws.txt",
+          "civil_procedure_remedies.txt"
+        ]
+      }
+    },
+    {
+      "name": "Upload Document",
+      "method": "POST",
+      "path": "/upload/",
+      "content_type": "multipart/form-data",
+      "accepted_types": [".pdf", ".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif", ".webp", ".txt"],
+      "max_size": "20 MB",
+      "example_request": {
+        "field_name": "file",
+        "filename": "consumer_complaint.txt",
+        "content": "(text content of a consumer complaint document)"
+      },
+      "example_response": {
+        "filename": "consumer_complaint.txt",
+        "extracted_text": "CONSUMER COMPLAINT\n\nComplainant: Rajesh Kumar...",
+        "structured_data": {
+          "document_type": "Complaint",
+          "parties": [
+            {"name": "Rajesh Kumar", "role": "complainant"},
+            {"name": "SuperGadgets Pvt. Ltd.", "role": "respondent"}
+          ],
+          "dates": ["2024-03-15", "2024-03-25", "2024-04-10", "2024-04-30"],
+          "monetary_values": ["Rs. 45,000", "Rs. 10,000"],
+          "key_clauses": ["warranty dispute", "refund demand", "compensation for mental agony"],
+          "missing_elements": ["witness"],
+          "evidence_strength": "Moderate",
+          "reason": "The complaint includes purchase details, timeline, and monetary claims but lacks witness signatures.",
+          "case_type": "Consumer Dispute"
+        },
+        "documents": [],
+        "stored_document": {
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "text": "CONSUMER COMPLAINT...",
+          "case_type": "Consumer Dispute",
+          "strength": "moderate",
+          "created_at": "2024-04-30T12:00:00Z"
+        },
+        "is_legal_document": true,
+        "message": "Document processed successfully. Classified as: Consumer Dispute."
+      }
+    },
+    {
+      "name": "Analyze Case",
+      "method": "POST",
+      "path": "/analyze/",
+      "content_type": "application/json",
+      "example_request": {
+        "structured_data": {
+          "document_type": "Complaint",
+          "parties": [
+            {"name": "Rajesh Kumar", "role": "complainant"},
+            {"name": "SuperGadgets Pvt. Ltd.", "role": "respondent"}
+          ],
+          "dates": ["2024-03-15", "2024-04-10"],
+          "monetary_values": ["Rs. 45,000"],
+          "key_clauses": ["warranty dispute", "refund demand"],
+          "missing_elements": ["witness"],
+          "evidence_strength": "Moderate",
+          "reason": "Complaint includes purchase details and timeline.",
+          "case_type": "Consumer Dispute"
+        },
+        "documents": null,
+        "raw_text": null
+      },
+      "example_response": {
+        "case_strength": "Moderate",
+        "case_difficulty": "Easy",
+        "confidence_score": 65,
+        "summary": "This consumer dispute involves a warranty claim for a defective laptop. The complainant has purchase documentation and a timeline of events, but the case could be strengthened with witness statements and additional evidence of the defect.",
+        "strong_points": [
+          "Clear documentation of purchase with invoice number and date",
+          "Legal notice was sent to the respondent, showing procedural diligence"
+        ],
+        "weak_points": [
+          "No witness signatures or independent defect assessment",
+          "Respondent's claim of 'physical damage' is unaddressed"
+        ],
+        "next_steps": [
+          "Obtain an independent technical assessment of the laptop defect",
+          "File a consumer complaint at the District Consumer Commission",
+          "Consult a qualified consumer rights advocate"
+        ],
+        "document_analysis": [
+          {
+            "document_type": "Complaint",
+            "evidence_strength": "Moderate",
+            "reason": "The complaint is well-structured with clear claims but lacks corroborating evidence."
+          }
+        ],
+        "rule_flags": [
+          "MISSING_WITNESS: No witness signature — may weaken enforceability",
+          "MONETARY_VALUES: 1 monetary value(s) identified",
+          "MULTIPLE_PARTIES: Both parties identified — strengthens record"
+        ]
+      }
+    },
+    {
+      "name": "Extract Events",
+      "method": "POST",
+      "path": "/extract-events/",
+      "content_type": "application/json",
+      "example_request": {
+        "text": "Agreement signed on 15/01/2024. First installment paid on 01/02/2024. Legal notice sent on 10/04/2024. Hearing on 15/06/2024."
+      },
+      "example_response": {
+        "events": [
+          {"date": "2024-01-15", "description": "Agreement signed between parties"},
+          {"date": "2024-02-01", "description": "First installment payment made"},
+          {"date": "2024-04-10", "description": "Legal notice sent demanding resolution"},
+          {"date": "2024-06-15", "description": "Hearing scheduled at District Consumer Forum"}
+        ]
+      }
+    }
+  ]
+}

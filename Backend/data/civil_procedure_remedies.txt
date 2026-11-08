@@ -1,0 +1,135 @@
+CIVIL PROCEDURE AND LEGAL REMEDIES IN INDIA
+=============================================
+
+This document covers the process of filing a civil suit in India, the court hierarchy, limitation periods, and alternative dispute resolution mechanisms.
+
+FILING A CIVIL SUIT — STEP BY STEP
+------------------------------------
+
+Step 1: Identify the Cause of Action
+Determine the legal basis for your claim — breach of contract, property dispute, money recovery, injunction, etc. The cause of action is the set of facts that gives rise to a legal right.
+
+Step 2: Determine Jurisdiction
+  - Pecuniary jurisdiction: Based on the value of the suit (e.g., suits up to Rs. 3 lakhs may go to Small Causes Court)
+  - Territorial jurisdiction: File in the court within whose geographic area the defendant resides or the cause of action arose
+  - Subject matter jurisdiction: Certain courts handle only specific types of cases
+
+Step 3: Draft the Plaint (Complaint)
+The plaint must contain:
+  - Name, description and address of the plaintiff and defendant
+  - Facts constituting the cause of action and when it arose
+  - Jurisdiction facts
+  - Relief sought
+  - Valuation of the suit for purposes of court fees
+
+Step 4: Pay Court Fees
+Court fees are calculated based on the suit valuation. Ad valorem fees apply for money suits. Fixed fees apply for certain types of suits.
+
+Step 5: File the Plaint
+File the plaint along with supporting documents in the court registry. The court will assign a case number.
+
+Step 6: Service of Summons
+The court issues summons to the defendant, who must appear and file a Written Statement (defence) within 30 days (extendable to 120 days).
+
+Step 7: Framing of Issues
+After hearing both parties, the court frames the issues (points of dispute) to be decided.
+
+Step 8: Trial, Evidence, and Judgment
+Both parties present evidence (documents and witnesses). After hearing arguments, the court delivers a judgment and decree.
+
+COURT HIERARCHY IN INDIA
+--------------------------
+
+1. District Courts (Trial Courts):
+   - Civil Judge (Junior Division): Suits up to a specified pecuniary limit (varies by state)
+   - Civil Judge (Senior Division): Suits above the Junior Division limit
+   - District Judge: Appeals from Junior Division, original jurisdiction for high-value suits
+
+2. High Courts (25 High Courts):
+   - Original jurisdiction for certain matters (e.g., company law, constitutional questions)
+   - Appellate jurisdiction over District Courts
+   - Writ jurisdiction under Article 226 of the Constitution
+
+3. Supreme Court of India:
+   - Apex court of the country
+   - Appeals from High Courts (by leave or certificate)
+   - Special Leave Petitions (SLP) under Article 136
+   - Original jurisdiction for disputes between states or between Centre and states
+   - Writ jurisdiction under Article 32 for fundamental rights
+
+LIMITATION PERIODS (LIMITATION ACT, 1963)
+-------------------------------------------
+
+The Limitation Act prescribes the maximum time within which a suit, appeal, or application must be filed:
+
+Money Recovery:
+- Suit for money lent: 3 years from the date of lending
+- Suit on a promissory note: 3 years from the date the note is payable
+- Suit for money due under a contract: 3 years from when the money becomes due
+
+Property:
+- Suit for possession of immovable property: 12 years from the date of dispossession
+- Suit for possession based on title: 12 years
+- Suit based on mortgagee's right to foreclosure: 30 years
+
+Contracts:
+- Breach of contract: 3 years from the date of breach
+- Specific performance: 3 years from the date fixed for performance
+
+Torts:
+- Compensation for wrongful act: 1 year from the date of the act
+- Defamation: 1 year
+
+Appeals:
+- Appeal to High Court: 30-90 days (varies by type)
+- Appeal to Supreme Court: 30-90 days
+- Review petition: 30 days
+
+IMPORTANT: Section 5 of the Limitation Act allows courts to condone delay if the applicant shows "sufficient cause" for not filing within the prescribed period. However, this discretion is limited and the explanation must be satisfactory.
+
+ALTERNATIVE DISPUTE RESOLUTION (ADR)
+--------------------------------------
+
+1. Arbitration (Arbitration and Conciliation Act, 1996):
+   - Parties agree to refer disputes to one or more arbitrators
+   - Arbitral award is binding and enforceable as a court decree
+   - International Commercial Arbitration is also covered
+   - Section 34: Challenge to arbitral award (limited grounds)
+   - Section 36: Enforcement of arbitral award
+   - Time limit: Award must be made within 12 months (extendable to 18 months)
+
+2. Mediation (Mediation Act, 2023):
+   - Voluntary process where a neutral mediator helps parties reach a settlement
+   - Mediated settlement agreements are enforceable
+   - Pre-litigation mediation is encouraged
+   - Confidentiality is maintained
+   - No appeal against a mediated settlement (except for fraud/corruption)
+
+3. Lok Adalat (Legal Services Authorities Act, 1987):
+   - Presided by a sitting or retired judge with two other members
+   - No court fee — if case pending in court, court fee is refunded
+   - Award is deemed a decree of a civil court — binding and final
+   - No appeal against a Lok Adalat award
+   - Best for: motor accident claims, labour disputes, matrimonial disputes, public utility services, cases where settlement amount is up to Rs. 1 crore
+
+4. Conciliation:
+   - Similar to mediation but the conciliator may suggest terms of settlement
+   - Settlement agreement has the status of an arbitral award
+
+LEGAL AID — NATIONAL LEGAL SERVICES AUTHORITY (NALSA)
+-------------------------------------------------------
+
+Under Article 39A of the Constitution and the Legal Services Authorities Act, 1987, free legal aid is available to:
+- Members of Scheduled Castes or Scheduled Tribes
+- Victims of trafficking
+- Women and children
+- Persons with disabilities
+- Industrial workmen
+- Persons in custody
+- Persons with annual income below the prescribed limit (Rs. 3 lakhs for Supreme Court matters, varies at state level)
+
+How to Apply:
+1. Visit the nearest Legal Services Authority (District/State/National)
+2. Submit an application with details of the case
+3. Legal Services Authority will appoint a panel lawyer at no cost
+4. Helpline: 15100 (NALSA toll-free number)

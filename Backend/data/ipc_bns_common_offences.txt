@@ -1,0 +1,53 @@
+INDIAN PENAL CODE (IPC) / BHARATIYA NYAYA SANHITA (BNS) — COMMON OFFENCES
+==========================================================================
+
+The Indian Penal Code, 1860 (IPC) has been replaced by the Bharatiya Nyaya Sanhita, 2023 (BNS) effective from 1 July 2024. Below are commonly invoked sections with their BNS equivalents.
+
+COMMON OFFENCES
+---------------
+
+Section 420 IPC (Section 318 BNS) — Cheating and Dishonestly Inducing Delivery of Property:
+Whoever cheats and thereby dishonestly induces the person deceived to deliver any property, or to make, alter or destroy any valuable security, shall be punished with imprisonment up to 7 years and shall also be liable to fine.
+Elements: (1) Deception, (2) Fraudulent or dishonest inducement, (3) Delivery of property or valuable security.
+
+Section 406 IPC (Section 316 BNS) — Criminal Breach of Trust:
+Whoever, being entrusted with property or dominion over property, dishonestly misappropriates or converts to his own use that property, shall be punished with imprisonment up to 3 years, or with fine, or with both.
+Elements: (1) Entrustment of property, (2) Dishonest misappropriation or conversion.
+
+Section 498A IPC (Sections 84-86 BNS) — Cruelty by Husband or Relatives:
+If the husband or any relative of the husband subjects a woman to cruelty, he shall be punished with imprisonment up to 3 years and shall also be liable to fine. This is a cognizable and non-bailable offence.
+"Cruelty" includes: (a) wilful conduct likely to drive the woman to commit suicide or cause grave injury; (b) harassment with a view to coercing her or her relatives to meet any unlawful demand for property or valuable security (dowry).
+
+Section 354 IPC (Section 74 BNS) — Assault or Use of Criminal Force on a Woman with Intent to Outrage Her Modesty:
+Punishment: Imprisonment of not less than 1 year but which may extend to 5 years and fine.
+
+Section 302 IPC (Section 101 BNS) — Murder:
+Whoever commits murder shall be punished with death or imprisonment for life, and shall also be liable to fine.
+
+Section 304A IPC (Section 106 BNS) — Death by Negligence:
+Whoever causes the death of any person by doing any rash or negligent act not amounting to culpable homicide shall be punished with imprisonment up to 2 years, or with fine, or with both.
+
+Section 379 IPC (Section 303 BNS) — Theft:
+Whoever commits theft shall be punished with imprisonment up to 3 years, or with fine, or with both.
+
+Section 323 IPC (Section 115 BNS) — Voluntarily Causing Hurt:
+Shall be punished with imprisonment up to 1 year, or with fine up to Rs. 1,000, or with both.
+
+FIR FILING PROCESS
+------------------
+
+Step 1: Visit the nearest police station having jurisdiction over the area where the offence was committed.
+Step 2: Give an oral or written complaint describing the facts of the incident, including date, time, place, and persons involved.
+Step 3: The Station House Officer (SHO) is legally bound to register an FIR for cognizable offences under Section 154 CrPC (Section 173 BNSS).
+Step 4: Obtain a free copy of the FIR. The police must provide this.
+Step 5: If the police refuse to register the FIR, you can:
+  (a) Send a written complaint to the Superintendent of Police (SP)
+  (b) File a complaint before the Judicial Magistrate under Section 156(3) CrPC (Section 175(3) BNSS)
+  (c) File a Zero FIR at any police station — the FIR will be transferred to the jurisdictional police station
+
+ZERO FIR: Under Sections 173 BNSS/154 CrPC, an FIR can be registered at any police station irrespective of jurisdiction. It must then be transferred to the appropriate station within 15 days.
+
+COGNIZABLE vs NON-COGNIZABLE OFFENCES
+--------------------------------------
+- Cognizable: Police can arrest without warrant and investigate without court permission (e.g., murder, theft, robbery, cheating).
+- Non-cognizable: Police cannot arrest without warrant; investigation requires court permission (e.g., assault, defamation, forgery of non-government documents).

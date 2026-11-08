@@ -1,0 +1,95 @@
+RENT CONTROL AND TENANCY LAWS IN INDIA
+========================================
+
+Tenancy law in India is governed by a combination of central legislation and state-specific rent control acts. The key central law is the Transfer of Property Act, 1882.
+
+TRANSFER OF PROPERTY ACT, 1882 — KEY SECTIONS
+----------------------------------------------
+
+Section 105 — Lease Defined:
+A lease of immoveable property is a transfer of a right to enjoy such property made for a certain time, express or implied, or in perpetuity, in consideration of a price paid or promised, or of money, a share of crops, service or any other thing of value to be rendered periodically or on specified occasions to the transferor (lessor/landlord) by the transferee (lessee/tenant).
+
+Section 106 — Duration and Termination of Lease:
+- Agricultural or manufacturing lease: year-to-year, terminable by 6 months' notice
+- Other purposes: month-to-month, terminable by 15 days' notice
+- Notice must expire with the end of a month of the tenancy
+
+Section 107 — Lease How Made:
+A lease of immoveable property from year to year, or for any term exceeding one year, can only be made by a registered instrument. All other leases may be made either by registered instrument or by oral agreement accompanied by delivery of possession.
+
+Section 108 — Rights and Liabilities of Lessor and Lessee:
+- Lessor must disclose material defects
+- Lessor is bound to put the lessee in possession
+- Lessee must pay rent and keep the property in good condition
+- Lessee must not use the property for purposes other than those for which it was leased
+
+Section 111 — Determination of Lease:
+A lease may be determined by:
+(a) Efflux of time
+(b) Happening of a specified event
+(c) Mutual agreement
+(d) Notice to quit
+(e) Forfeiture (breach of condition)
+(f) Merger
+
+TENANT RIGHTS
+-------------
+
+1. Right to Due Process: A tenant cannot be evicted without following the due process of law (court order). Self-help eviction (locking out, cutting water/electricity) by the landlord is illegal.
+
+2. Right to Essential Services: Landlord cannot disconnect water, electricity, or other essential services to force eviction. This may attract criminal penalties under state rent control acts.
+
+3. Right to Fair Rent: Under most state rent control laws, rent increasescannot be arbitrary. The Rent Controller can fix "standard rent" or "fair rent."
+
+4. Right to Receipt: Tenant has the right to receive a rent receipt from the landlord for every payment made.
+
+5. Right to Privacy: Landlord must give reasonable notice before entering the rented premises, except in emergencies.
+
+LANDLORD RIGHTS
+---------------
+
+1. Right to Eviction for Non-Payment: If the tenant defaults on rent for a specified period (usually 3 months), the landlord can file for eviction.
+
+2. Right to Eviction for Personal Need: Landlord can seek eviction if they genuinely need the premises for personal use or for the use of family members.
+
+3. Right to Eviction for Misuse: If the tenant uses the premises for a purpose other than what was agreed upon, the landlord can seek eviction.
+
+4. Right to Fair Rent: Landlord can apply for revision of rent if the current rent is below the fair market rate (under state rent control acts).
+
+5. Right to Property Return: Upon termination of the lease, the tenant must return the property in the same condition (subject to normal wear and tear).
+
+EVICTION PROCESS
+----------------
+
+Step 1: Send a legal notice to the tenant specifying the ground for eviction and giving them reasonable time to comply (usually 15 days to 1 month).
+
+Step 2: If the tenant does not vacate, file an eviction petition before the Rent Controller or competent civil court.
+
+Step 3: The court will issue notice to the tenant and hear both parties. The tenant can contest the eviction.
+
+Step 4: If the court is satisfied that grounds for eviction exist, it will pass an eviction order. The tenant is usually given 30-90 days to vacate.
+
+MODEL TENANCY ACT, 2021
+------------------------
+
+The central government published the Model Tenancy Act (MTA) in 2021 for adoption by states. Key provisions:
+
+1. Security Deposit Cap:
+   - Residential: Maximum 2 months' rent
+   - Commercial: Maximum 6 months' rent
+
+2. Rent Revision: Not more than once during a tenancy agreement, with 3 months' prior notice.
+
+3. Written Agreement: Every tenancy must have a written agreement, which must be submitted to the Rent Authority within 2 months.
+
+4. Notice Period:
+   - Tenant vacating: Must give notice equal to the rent payment period (e.g., 1 month if paying monthly)
+   - Landlord: Must give notice as specified in the agreement
+
+5. Rent Court & Tribunal: Establishes dedicated Rent Courts and Rent Tribunals for quick dispute resolution.
+
+6. Anti-Subletting: Tenant cannot sublease or transfer the premises without written consent of the landlord.
+
+7. Overstaying Penalty: If a tenant does not vacate after the tenancy period ends and notice has been given:
+   - First 2 months: Double the monthly rent
+   - After 2 months: 4 times the monthly rent

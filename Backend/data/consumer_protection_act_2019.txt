@@ -1,0 +1,64 @@
+CONSUMER PROTECTION ACT, 2019
+==============================
+
+The Consumer Protection Act, 2019 replaced the older Consumer Protection Act, 1986. It provides enhanced protection to consumers and establishes Consumer Dispute Redressal Commissions at the district, state, and national levels.
+
+KEY DEFINITIONS
+---------------
+
+Section 2(7) — Consumer:
+A "consumer" means any person who buys any goods or hires or avails any services for a consideration which has been paid or promised or partly paid and partly promised, or under any system of deferred payment. It does NOT include a person who obtains goods for resale or for any commercial purpose. However, a person who buys goods and uses them exclusively for earning their livelihood by self-employment is considered a consumer.
+
+Section 2(11) — Defect:
+"Defect" means any fault, imperfection or shortcoming in the quality, quantity, potency, purity or standard which is required to be maintained by or under any law or any contract, express or implied, or as is claimed by the trader.
+
+Section 2(12) — Deficiency:
+"Deficiency" means any fault, imperfection, shortcoming or inadequacy in the quality, nature and manner of performance which is required to be maintained by or under any law or any contract, or as is claimed by any person.
+
+CONSUMER DISPUTE REDRESSAL COMMISSIONS
+---------------------------------------
+
+Section 35 — District Commission (Jurisdiction):
+The District Commission has jurisdiction to entertain complaints where the value of the goods or services paid as consideration does not exceed Rs. 1 crore (one crore rupees). This is the first tier of consumer courts.
+
+Section 36 — Who Can File a Complaint:
+A complaint may be filed by:
+(a) the consumer to whom the goods are sold or delivered or the service is provided;
+(b) any recognised consumer association on behalf of the consumer;
+(c) one or more consumers, where numerous consumers have the same interest (class action);
+(d) the Central Government or any State Government;
+(e) the Central Authority (CCPA);
+(f) legal representative in case of death of the consumer.
+
+Section 38 — Procedure on Admission of Complaint:
+On admission of a complaint, the District Commission shall refer a copy of the complaint to the opposite party within 21 days and the opposite party shall give their version within 30 days (extendable by 15 days for sufficient cause).
+
+Section 39 — Hearing Procedure:
+The complaint must be decided within 3 months from the date of receipt of the response from the opposite party. If the goods require testing, the time limit is 5 months.
+
+Section 69 — Product Liability:
+A product liability action may be brought by a complainant against a product manufacturer, product service provider, or product seller for any harm caused by a defective product. The manufacturer is liable even without proof of negligence or intention.
+
+FILING A CONSUMER COMPLAINT — STEP-BY-STEP
+-------------------------------------------
+
+Step 1: Identify whether your dispute falls under consumer law (goods or services purchased for personal use).
+Step 2: Gather all evidence — bills, receipts, warranty cards, emails, photographs of defective goods.
+Step 3: Send a legal notice to the opposite party giving them 15-30 days to resolve the issue.
+Step 4: If unresolved, file a complaint at the appropriate forum based on claim value:
+  - District Commission: Up to Rs. 1 crore
+  - State Commission: Rs. 1 crore to Rs. 10 crore
+  - National Commission: Above Rs. 10 crore
+Step 5: Attach all evidence and pay the prescribed fee.
+
+TIME LIMIT: A complaint must be filed within 2 years from the date on which the cause of action arises.
+
+IMPORTANT REMEDIES
+------------------
+The Commission may order:
+- Removal of defect from goods
+- Replacement of goods
+- Refund of the price paid
+- Compensation for loss or injury suffered
+- Discontinuation of the unfair trade practice
+- Adequate costs to parties
