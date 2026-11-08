@@ -589,9 +589,9 @@ function HeroVisual() {
         initial={{ opacity: 0, y: 40, rotateX: 12 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
         transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="surface-card relative overflow-hidden rounded-[2rem] p-3"
+        className="surface-card relative overflow-hidden rounded-4xl p-3"
       >
-        <div className="relative h-72 overflow-hidden rounded-[1.5rem] sm:h-80 lg:h-[26rem]">
+        <div className="relative h-72 overflow-hidden rounded-3xl sm:h-80 lg:h-104">
           {/* Animated light backdrop — no video */}
           <div className="absolute inset-0 bg-linear-to-br from-blue-50 via-white to-violet-50" />
           <div className="animate-drift-a absolute -top-12 -left-10 h-56 w-56 rounded-full bg-blue-300/40 blur-3xl" />
@@ -641,7 +641,7 @@ function HeroVisual() {
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
             <span className="ml-2 flex items-center gap-1.5 text-xs font-medium text-slate-500">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 [animation:pulse-ring_2s_ease-out_infinite]" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-[pulse-ring_2s_ease-out_infinite]" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
               </span>
               Analysing live
@@ -812,8 +812,8 @@ export default function LandingPage() {
     <div className="relative w-full overflow-x-clip bg-bg-primary">
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="animate-drift-a absolute -top-32 -left-24 h-[30rem] w-[30rem] rounded-full bg-blue-200/45 blur-3xl" />
-        <div className="animate-drift-b absolute top-24 -right-32 h-[34rem] w-[34rem] rounded-full bg-violet-200/40 blur-3xl" />
+        <div className="animate-drift-a absolute -top-32 -left-24 h-120 w-120 rounded-full bg-blue-200/45 blur-3xl" />
+        <div className="animate-drift-b absolute top-24 -right-32 h-136 w-136 rounded-full bg-violet-200/40 blur-3xl" />
         <div className="animate-float-slower absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-cyan-200/35 blur-3xl" />
         <div
           className="absolute inset-0 opacity-[0.35]"
@@ -1123,7 +1123,7 @@ export default function LandingPage() {
         {/* CTA */}
         <section className="relative mx-auto max-w-(--max-w-app) px-4 py-20 sm:px-6 lg:py-28">
           <Reveal>
-            <div className="relative overflow-hidden rounded-[2rem] border border-blue-100 bg-linear-to-br from-blue-50 via-white to-violet-50 px-6 py-14 text-center sm:px-14">
+            <div className="relative overflow-hidden rounded-4xl border border-blue-100 bg-linear-to-br from-blue-50 via-white to-violet-50 px-6 py-14 text-center sm:px-14">
               <div className="animate-spin-slow pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full border border-blue-200/60" />
               <div className="animate-drift-a pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 rounded-full bg-blue-200/40 blur-3xl" />
 

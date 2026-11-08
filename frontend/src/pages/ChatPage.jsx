@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
@@ -75,6 +75,7 @@ const getLocation = () => {
 
 const ChatPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const [messages, setMessages] = useState([
     {
@@ -90,6 +91,14 @@ const ChatPage = () => {
 
   // Cache location so we only prompt once
   const locationRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof location.state?.draft === 'string') {
+      setInput(location.state.draft);
+      // Consume the draft so revisiting /chat does not restore a stale prompt.
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.pathname, location.state, navigate]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
