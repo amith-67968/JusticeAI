@@ -383,22 +383,6 @@ The RAG chatbot draws from curated reference documents covering:
 - **Rent & Tenancy Laws** — Transfer of Property Act; Model Tenancy Act, 2021
 - **Civil Procedure & Remedies** — Filing suits; court hierarchy; limitation periods; ADR; legal aid
 
----
-
-## 🖼️ Screenshots
-
-<!-- Add screenshots of the app here -->
-<!-- ![Landing Page](docs/screenshots/landing.png) -->
-<!-- ![Dashboard](docs/screenshots/dashboard.png) -->
-<!-- ![Chat](docs/screenshots/chat.png) -->
-
-*Coming soon*
-
----
-
-## 👥 Team
-
-Built for **Build With AI Hackathon**
 
 ---
 
