@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, ArrowLeft } from 'lucide-react';
+import {
+  ArrowLeft,
+  FileText,
+  LayoutDashboard,
+  MessageSquare,
+  Scale,
+  Send,
+  ShieldCheck,
+  UploadCloud,
+} from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 import { useAuth } from '../context/AuthContext';
@@ -8,18 +17,21 @@ import { api } from '../lib/api';
 
 const createMessageId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-const buildAssistantMessage = (response) => {
-  const contentBlocks = [
-    response.answer,
-    response.explanation,
-    response.why_applicable ? `Why this applies:\n${response.why_applicable}` : '',
-  ].filter(Boolean);
+const NAV_ITEMS = [
+  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { name: 'AI Legal Chat', path: '/chat', icon: MessageSquare },
+  { name: 'Case Analyzer', path: '/analyzer', icon: UploadCloud },
+  { name: 'Documents', path: '/documents', icon: FileText },
+];
 
+const buildAssistantMessage = (response) => {
   return {
     id: createMessageId(),
     role: 'ai',
-    content: contentBlocks.join('\n\n'),
+    content: response.answer,
     metadata: {
+      explanation: response.explanation || '',
+      whyApplicable: response.why_applicable || '',
       laws: response.relevant_laws || [],
       plan: response.next_steps || [],
       sources: response.sources || [],
@@ -31,6 +43,14 @@ const buildAssistantMessage = (response) => {
     },
   };
 };
+
+const getUserInitials = (name = '') =>
+  name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('') || 'JA';
 
 // ── Geolocation helper ─────────────────────────────────────────────────
 
@@ -209,76 +229,197 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col bg-gray-50">
-      <div className="shrink-0 border-b border-slate-200 bg-white">
-        <div className="flex w-full items-center gap-3 px-4 py-4 sm:px-6">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="text-slate-500 hover:text-slate-900 transition-colors"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <div className="min-w-0">
-            <h1 className="text-lg font-bold text-slate-900 sm:text-xl">JusticeAI Chat</h1>
-            <p className="text-xs text-slate-500">{user?.name || 'Current session'}</p>
+    <div className="flex h-dvh min-h-dvh overflow-hidden bg-[#f8f9ff] text-slate-900">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200/80 bg-white/95 px-4 py-5 shadow-[8px_0_30px_rgba(15,23,42,0.025)] backdrop-blur-xl lg:flex">
+        <button
+          type="button"
+          onClick={() => navigate('/dashboard')}
+          className="mb-8 flex items-center gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-slate-50"
+        >
+          <span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-linear-to-br from-white to-blue-50 text-blue-700 shadow-sm">
+            <Scale size={20} strokeWidth={1.8} />
+          </span>
+          <span>
+            <span className="block text-[15px] font-bold tracking-[-0.03em] text-slate-900">
+              Justice<span className="text-blue-700">AI</span>
+            </span>
+            <span className="block text-[9px] font-medium uppercase tracking-[0.12em] text-slate-400">
+              Legal intelligence
+            </span>
+          </span>
+        </button>
+
+        <p className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+          Workspace
+        </p>
+        <nav aria-label="Main navigation" className="space-y-1">
+          {NAV_ITEMS.map(({ name, path, icon: Icon }) => {
+            const active = path === '/chat';
+            return (
+              <button
+                key={path}
+                type="button"
+                onClick={() => navigate(path)}
+                aria-current={active ? 'page' : undefined}
+                className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-all ${
+                  active
+                    ? 'border-blue-100/80 bg-blue-50/80 text-blue-700 shadow-[0_2px_8px_rgba(37,99,235,0.06)]'
+                    : 'border-transparent text-slate-500 hover:border-slate-100 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                {React.createElement(Icon, {
+                  size: 16,
+                  className: active ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600',
+                })}
+                {name}
+                {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-600" />}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto">
+          <div className="mb-3 rounded-xl border border-blue-100/80 bg-linear-to-br from-blue-50/90 to-white p-3.5 shadow-[0_3px_12px_rgba(37,99,235,0.04)]">
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-slate-700">
+              <span className="grid h-6 w-6 place-items-center rounded-lg bg-white text-blue-600 shadow-sm">
+                <ShieldCheck size={12} />
+              </span>
+              Your files stay private
+            </div>
+            <p className="text-[9px] leading-relaxed text-slate-500">
+              Documents are processed for your analysis and never used to train public models.
+            </p>
+          </div>
+          <div className="flex items-center gap-2.5 border-t border-slate-100 pt-3">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-linear-to-br from-blue-600 to-indigo-600 text-[10px] font-semibold text-white shadow-sm">
+              {getUserInitials(user?.name)}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[11px] font-semibold text-slate-800">
+                {user?.name || 'JusticeAI User'}
+              </span>
+              <span className="block truncate text-[9px] text-slate-400">{user?.email || ' '}</span>
+            </span>
           </div>
         </div>
-      </div>
+      </aside>
 
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col overflow-y-auto px-3 py-4 sm:px-6 sm:py-6">
-        <AnimatePresence initial={false}>
-          {messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
-          ))}
-
-          {isTyping && (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="mb-4 flex w-full justify-start sm:mb-6"
+      <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
+          <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              aria-label="Back to dashboard"
+              className="mr-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-blue-700"
             >
-              <div className="flex max-w-[88%] items-end gap-2.5 sm:max-w-[70%] sm:gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-slate-200 text-slate-600">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse"></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse delay-75 mx-0.5"></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse delay-150"></span>
-                </div>
-                <div className="flex items-center rounded-2xl rounded-bl-md bg-white p-3.5 text-sm text-slate-500 shadow-sm sm:p-4">
-                  Reviewing relevant laws...
-                </div>
+              <ArrowLeft size={16} />
+            </button>
+            <span className="font-medium text-slate-400">Workspace</span>
+            <span className="text-slate-300">/</span>
+            <span className="truncate font-semibold text-slate-700">AI Legal Chat</span>
+          </div>
+          <span className="ml-3 grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-white bg-linear-to-br from-blue-600 to-indigo-600 text-[10px] font-bold text-white shadow-sm ring-1 ring-slate-200">
+            {getUserInitials(user?.name).slice(0, 1)}
+          </span>
+        </header>
+
+        <nav aria-label="Mobile navigation" className="flex shrink-0 gap-1 overflow-x-auto border-b border-slate-200/80 bg-white px-3 py-2 lg:hidden">
+          {NAV_ITEMS.map(({ name, path, icon: Icon }) => (
+            <button
+              key={path}
+              type="button"
+              onClick={() => navigate(path)}
+              aria-current={path === '/chat' ? 'page' : undefined}
+              className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs ${
+                path === '/chat'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              {React.createElement(Icon, { size: 15 })}
+              {name}
+            </button>
+          ))}
+        </nav>
+
+        <section className="flex min-h-0 flex-1 flex-col">
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="mx-auto w-full max-w-5xl px-4 pb-6 pt-6 sm:px-7 sm:pt-8 lg:px-10">
+              <div className="mb-7">
+                <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-blue-700/80">
+                  Legal guidance
+                </p>
+                <h1 className="text-2xl font-bold tracking-[-0.035em] text-slate-950 sm:text-[28px]">
+                  AI Legal Chat
+                </h1>
+                <p className="mt-1.5 max-w-2xl text-xs leading-relaxed text-slate-500 sm:text-[13px]">
+                  Consult statutory records, procedural remedies, case precedent, or ask questions about your documents.
+                </p>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div ref={messagesEndRef} className="h-4" />
-      </div>
 
-      <div className="shrink-0 border-t border-slate-200 bg-white p-3 shadow-sm sm:p-4">
-        <div className="mx-auto flex w-full max-w-5xl items-center gap-2 sm:gap-3">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            placeholder="Ask about your case, law section, or uploaded document..."
-            className="min-w-0 flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-slate-900 outline-none shadow-sm transition-all focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          />
+              <div className="space-y-1">
+                <AnimatePresence initial={false}>
+                  {messages.map((message) => (
+                    <ChatMessage key={message.id} message={message} />
+                  ))}
 
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || isTyping}
-            className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            title="Send Message"
-          >
-            <Send size={20} className="mr-0.5 mt-0.5" />
-          </button>
-        </div>
+                  {isTyping && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="mb-5 flex w-full justify-start"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <div className="flex w-full items-start gap-3">
+                        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-blue-700">
+                          <Scale size={15} />
+                        </div>
+                        <div className="flex items-center gap-2 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-xs text-slate-500 shadow-[0_2px_8px_rgba(15,23,42,0.025)]">
+                          <span className="flex gap-1">
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 [animation-delay:120ms]" />
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 [animation-delay:240ms]" />
+                          </span>
+                          Reviewing relevant laws…
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div ref={messagesEndRef} className="h-3" />
+              </div>
+            </div>
+          </div>
+
+          <footer className="shrink-0 border-t border-slate-200/80 bg-white/95 px-3 py-3 shadow-[0_-4px_18px_rgba(15,23,42,0.025)] backdrop-blur sm:px-6 sm:py-4">
+            <form onSubmit={handleSend} className="mx-auto w-full max-w-5xl">
+              <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-[0_3px_12px_rgba(15,23,42,0.05)] transition focus-within:border-blue-200 focus-within:ring-4 focus-within:ring-blue-50 sm:gap-3 sm:p-2">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask about your case, law section, or uploaded document…"
+                  aria-label="Message the legal assistant"
+                  className="min-w-0 flex-1 border-0 bg-transparent px-3 py-2.5 text-xs text-slate-800 shadow-none outline-none placeholder:text-slate-400 focus:border-0 focus:ring-0 sm:px-4 sm:text-[13px]"
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isTyping}
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-600 p-0 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:w-11"
+                  aria-label="Send message"
+                  title="Send message"
+                >
+                  <Send size={17} />
+                </button>
+              </div>
+              <p className="mt-2 text-center text-[9px] leading-relaxed text-slate-400">
+                AI legal guidance is for informational purposes. Verify with qualified legal counsel.
+              </p>
+            </form>
+          </footer>
+        </section>
       </div>
     </div>
   );
