@@ -216,26 +216,23 @@ def _build_rule_based_fallback(
     history: Optional[list[dict]] = None,
     context: str = "",
 ) -> dict:
-    history = history or []
-    source_list = ", ".join(sources) if sources else "no specific reference files"
-    passage_summary = context[:1800].strip()
-    if not passage_summary or passage_summary == "No relevant context found.":
-        passage_summary = "No matching legal passage was available from the local reference library."
-
+    # Retrieval alone is not enough to decide that a passage applies. In
+    # particular, returning the first keyword match as an explanation can
+    # mislead users when the deployed LLM provider is unavailable.
     return {
         "answer": (
-            "I’m unable to generate a complete legal response right now. "
-            f"For your question, the local search found {source_list}. "
-            "I can still help once the legal assistant service is available; please include the jurisdiction and the key facts if they are not already in the chat."
+            "I couldn’t generate a reliable legal response just now. "
+            "The available reference search is not enough to confirm which law applies, "
+            "so I won’t guess. Please try again shortly, and include your country/state and the key facts."
         ),
         "relevant_laws": [],
-        "explanation": passage_summary,
-        "why_applicable": "This is a limited retrieval fallback, not a completed legal analysis. It does not assume your question concerns an earlier topic.",
+        "explanation": "No legal explanation was generated. Retrieved keyword matches are not shown as applicable law unless the assistant can verify their relevance.",
+        "why_applicable": "The legal generation service did not return a response, so no law has been assessed against your facts.",
         "next_steps": [
-            "Keep relevant documents, messages, dates, and transaction or case details together.",
-            "For urgent or case-specific advice, consult a qualified lawyer in the relevant jurisdiction.",
+            "Keep relevant documents, messages, dates, and case details together.",
+            "For urgent or case-specific advice, consult a qualified lawyer in your jurisdiction.",
         ],
-        "sources": sources,
+        "sources": [],
     }
 
 
