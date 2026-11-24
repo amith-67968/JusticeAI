@@ -53,15 +53,22 @@ class DocumentStorageError(RuntimeError):
 # Legal-document heuristic
 # ═══════════════════════════════════════════════════════════════════════════
 
-_LEGAL_KEYWORDS = (
-    "accused", "act", "affidavit", "agreement", "appellant", "arbitration",
-    "buyer", "case", "cheque", "clause", "complainant", "complaint",
-    "consumer", "contract", "court", "damages", "decree", "defendant",
-    "dispute", "evidence", "fir", "invoice", "judge", "judgment",
-    "landlord", "law", "lease", "legal notice", "liability",
-    "money recovery", "notice", "order", "payment", "petition",
-    "plaintiff", "police", "receipt", "refund", "respondent", "section",
-    "seller", "stamp", "summons", "tenant", "tribunal", "witness",
+_LEGAL_DOCUMENT_MARKERS = (
+    "first information report", "fir number", "fir no", "police complaint",
+    "legal notice", "court order", "court judgment", "judgment and decree",
+    "decree of the court", "summons", "affidavit", "plaint", "petition",
+    "consumer complaint", "complainant", "respondent", "plaintiff", "defendant",
+    "agreement", "contract", "lease deed", "rental agreement", "invoice",
+    "tax invoice", "receipt",
+)
+
+_LEGAL_REFERENCE_MARKERS = (
+    "section of the", "section of act", "under the act", "under the code",
+    "court of", "district court", "high court", "supreme court",
+    "consumer commission", "criminal procedure", "penal code",
+    "information technology act", "consumer protection act", "transfer of property act",
+    "plaintiff", "defendant", "petitioner", "respondent", "complainant",
+    "case number", "case no", "fir number", "fir no",
 )
 
 
@@ -76,20 +83,20 @@ def _looks_like_legal_document(
     if len(normalised) < 80:
         return False
 
-    keyword_hits = sum(1 for kw in _LEGAL_KEYWORDS if kw in normalised)
-    has_dates = bool(extract_dates_regex(raw_text))
-    has_money = bool(extract_money_regex(raw_text))
+    def contains_marker(marker: str) -> bool:
+        return bool(re.search(rf"\b{re.escape(marker)}\b", normalised))
 
-    if keyword_hits >= 2:
+    # A clear legal instrument or proceeding is enough on its own. Generic
+    # form language, signatures, payments, or an ML case label are not.
+    if any(contains_marker(marker) for marker in _LEGAL_DOCUMENT_MARKERS):
         return True
-    if keyword_hits >= 1 and (has_dates or has_money):
-        return True
-    if case_type != "Others" and keyword_hits >= 1:
-        top_score = max(case_scores.values()) if case_scores else 0.0
-        if top_score >= 0.8:
-            return True
 
-    return False
+    # For narrative legal material without a formal document title, require
+    # multiple independent references to law or legal proceedings.
+    reference_hits = sum(
+        1 for marker in _LEGAL_REFERENCE_MARKERS if contains_marker(marker)
+    )
+    return reference_hits >= 2
 
 
 # ═══════════════════════════════════════════════════════════════════════════

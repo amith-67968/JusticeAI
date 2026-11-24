@@ -12,6 +12,7 @@ import json
 import os
 import re
 import threading
+import time
 from collections import Counter
 from typing import Optional
 
@@ -209,128 +210,30 @@ def _should_skip_rag(query: str) -> bool:
     return bool(tokens) and all(token in _GREETING_TOKENS for token in tokens) and len(tokens) <= 4
 
 
-def _build_rule_based_fallback(query: str, sources: list[str]) -> dict:
-    tokens = set(_tokenize_text(query))
-
-    if tokens & _WOMEN_SAFETY_KEYWORDS:
-        return {
-            "answer": (
-                "Based on what you described, this appears to involve unwanted sexual touching. "
-                "Under the criminal-law reference bundled with the app, Section 354 IPC / Section 74 BNS can be relevant. "
-                "You can go to the nearest police station and ask for FIR registration, and if jurisdiction is different, "
-                "you can ask for a Zero FIR and have it transferred."
-            ),
-            "relevant_laws": [
-                "Section 354 IPC / Section 74 BNS",
-                "Section 154 CrPC / Section 173 BNSS",
-            ],
-            "explanation": (
-                "The bundled criminal-law reference treats assault or criminal force on a woman with intent to outrage modesty "
-                "as a cognizable offence and also explains the FIR and Zero FIR process."
-            ),
-            "why_applicable": (
-                "Your query describes physical touching without consent in a public vehicle and asks for immediate next steps."
-            ),
-            "next_steps": [
-                "Preserve the video, route details, bus number, ticket, time, and names of any witnesses.",
-                "Go to the nearest police station and ask for FIR or Zero FIR registration.",
-                "Ask for a free copy of the FIR after registration.",
-            ],
-            "sources": sources,
-        }
-
-    if tokens & _CONSUMER_KEYWORDS:
-        return {
-            "answer": (
-                "This looks like a consumer dispute about defective goods and refund denial. "
-                "Under the Consumer Protection Act, 2019, you may seek refund, replacement, or compensation "
-                "if the product is defective or the service is deficient."
-            ),
-            "relevant_laws": [
-                "Consumer Protection Act, 2019 - Section 2(11)",
-                "Consumer Protection Act, 2019 - Section 2(12)",
-                "Consumer Protection Act, 2019 - Section 35",
-                "Consumer Protection Act, 2019 - Section 69",
-            ],
-            "explanation": (
-                "The bundled consumer-law reference defines defect and deficiency, explains who can file a complaint, "
-                "and lists refund and replacement among the available remedies."
-            ),
-            "why_applicable": (
-                "Your query mentions an online purchase, a damaged item, and refusal of refund, which fits the consumer-law pattern."
-            ),
-            "next_steps": [
-                "Keep the invoice, order screenshots, photos of the damaged item, and the refund denial messages.",
-                "Send a written complaint or legal notice asking for refund or replacement.",
-                "If unresolved, file a complaint before the appropriate Consumer Commission.",
-            ],
-            "sources": sources,
-        }
-
-    if tokens & _CYBER_KEYWORDS:
-        return {
-            "answer": (
-                "This appears to be a cyber-crime issue. The app's cyber-law references point to IT Act provisions "
-                "such as Sections 66C and 66D for identity theft and cheating by personation, depending on the facts."
-            ),
-            "relevant_laws": [
-                "IT Act, 2000 - Section 66C",
-                "IT Act, 2000 - Section 66D",
-                "IT Act, 2000 - Section 43",
-            ],
-            "explanation": (
-                "The bundled cyber-crime source maps common online fraud, OTP scams, identity theft, and phishing-style conduct "
-                "to the IT Act provisions commonly used in India."
-            ),
-            "why_applicable": (
-                "Your query contains cyber-fraud style keywords that match the offences described in the local reference file."
-            ),
-            "next_steps": [
-                "Preserve screenshots, transaction IDs, phone numbers, emails, and account details involved.",
-                "Report promptly through the cyber-crime portal or the local police station.",
-                "If money was lost, act immediately and contact the relevant reporting channels without delay.",
-            ],
-            "sources": sources,
-        }
-
-    if tokens & _TENANCY_KEYWORDS:
-        return {
-            "answer": (
-                "This appears to be a tenancy dispute. The tenancy-law reference says eviction and lease disputes usually require "
-                "legal notice and due process rather than self-help action."
-            ),
-            "relevant_laws": [
-                "Transfer of Property Act, 1882 - Section 106",
-                "Transfer of Property Act, 1882 - Section 111",
-            ],
-            "explanation": (
-                "The bundled tenancy material explains notice periods, lease termination, and the general rule that such disputes "
-                "should go through proper legal process."
-            ),
-            "why_applicable": (
-                "Your query contains common tenancy-dispute keywords covered by the local legal reference source."
-            ),
-            "next_steps": [
-                "Collect the rent agreement, receipts, notice messages, and landlord-tenant communications.",
-                "Review the notice period and termination terms in the lease.",
-                "Consider sending or responding to a formal legal notice before moving to court.",
-            ],
-            "sources": sources,
-        }
+def _build_rule_based_fallback(
+    query: str,
+    sources: list[str],
+    history: Optional[list[dict]] = None,
+    context: str = "",
+) -> dict:
+    history = history or []
+    source_list = ", ".join(sources) if sources else "no specific reference files"
+    passage_summary = context[:1800].strip()
+    if not passage_summary or passage_summary == "No relevant context found.":
+        passage_summary = "No matching legal passage was available from the local reference library."
 
     return {
         "answer": (
-            "I could not reach the AI generation layer just now, but the retrieved legal references still suggest "
-            "your issue should be reviewed under the listed source materials below."
+            "I’m unable to generate a complete legal response right now. "
+            f"For your question, the local search found {source_list}. "
+            "I can still help once the legal assistant service is available; please include the jurisdiction and the key facts if they are not already in the chat."
         ),
         "relevant_laws": [],
-        "explanation": (
-            "The search layer is still finding relevant legal reference documents, but a full generated explanation was unavailable."
-        ),
-        "why_applicable": "This fallback answer is based on retrieved source documents and keyword matching only.",
+        "explanation": passage_summary,
+        "why_applicable": "This is a limited retrieval fallback, not a completed legal analysis. It does not assume your question concerns an earlier topic.",
         "next_steps": [
-            "Review the listed sources and gather the main facts, dates, parties, and supporting evidence.",
-            "Try the request again after the AI service is available, or consult a qualified advocate for urgent matters.",
+            "Keep relevant documents, messages, dates, and transaction or case details together.",
+            "For urgent or case-specific advice, consult a qualified lawyer in the relevant jurisdiction.",
         ],
         "sources": sources,
     }
@@ -563,12 +466,41 @@ class RAGService:
 
         return self._keyword_search(query, k)
 
-    async def chat(self, query: str) -> dict:
+    async def chat(self, query: str, history: Optional[list[dict]] = None) -> dict:
         """RAG chat: greeting guard -> retrieval -> LLM."""
+        request_started = time.perf_counter()
         if _should_skip_rag(query):
             return dict(_GREETING_RESPONSE)
 
-        results = self._retrieve(query, settings.RAG_TOP_K)
+        history = history or []
+        recent_history = [
+            item for item in history
+            if item.get("role") in {"user", "assistant"} and item.get("content")
+        ][-10:]
+
+        # Keep a new legal question independent; bring the last issue into
+        # retrieval only when the wording signals a follow-up.
+        previous_user_query = next(
+            (str(item["content"]) for item in reversed(recent_history)
+             if item.get("role") == "user" and item.get("content")),
+            "",
+        )
+        normalised_query = _normalise_query(query)
+        follow_up_prefixes = (
+            "explain ", "clarify ", "what about ", "what if ", "why ",
+            "how does that ", "how does this ", "what does that ",
+            "what does this ", "tell me more", "and then ", "can they ",
+            "does that ", "does this ", "those laws", "these laws",
+        )
+        is_follow_up = normalised_query.startswith(follow_up_prefixes)
+        retrieval_query = (
+            f"{previous_user_query} {query}".strip()
+            if is_follow_up and previous_user_query
+            else query
+        )
+        retrieval_started = time.perf_counter()
+        results = self._retrieve(retrieval_query, settings.RAG_TOP_K)
+        retrieval_seconds = time.perf_counter() - retrieval_started
 
         context_parts = []
         sources: list[str] = []
@@ -588,17 +520,20 @@ class RAGService:
             client = get_groq_client()
             prompt = CHAT_USER.format(query=query, context=context)
 
-            messages = [
-                {"role": "system", "content": CHAT_SYSTEM},
-                {"role": "user", "content": prompt},
-            ]
+            messages = [{"role": "system", "content": CHAT_SYSTEM}]
+            messages.extend(
+                {"role": item["role"], "content": str(item["content"])}
+                for item in recent_history
+            )
+            messages.append({"role": "user", "content": prompt})
 
+            llm_started = time.perf_counter()
             try:
                 response = await client.chat.completions.create(
                     model=settings.GROQ_MODEL,
                     messages=messages,
                     temperature=0.2,
-                    max_completion_tokens=2000,
+                    max_completion_tokens=1200,
                     response_format=JSON_OBJECT_RESPONSE_FORMAT,
                 )
             except Exception as structured_exc:
@@ -610,7 +545,7 @@ class RAGService:
                     model=settings.GROQ_MODEL,
                     messages=messages,
                     temperature=0.2,
-                    max_completion_tokens=2000,
+                    max_completion_tokens=1200,
                 )
 
             raw = extract_response_content(response).strip()
@@ -635,11 +570,19 @@ class RAGService:
 
             if not result.get("sources"):
                 result["sources"] = sources
+            print(
+                "[rag/timing] "
+                f"retrieval={retrieval_seconds:.2f}s "
+                f"generation={time.perf_counter() - llm_started:.2f}s "
+                f"total={time.perf_counter() - request_started:.2f}s"
+            )
             return result
 
         except Exception as exc:
-            print(f"[rag] LLM error: {exc}")
-            return _build_rule_based_fallback(query, sources)
+            print(
+                f"[rag] LLM error after {time.perf_counter() - request_started:.2f}s: {exc}"
+            )
+            return _build_rule_based_fallback(query, sources, history, context)
 
     def search(self, query: str, k: Optional[int] = None) -> list[dict]:
         """Pure retrieval without the LLM."""

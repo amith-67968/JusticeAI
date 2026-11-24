@@ -51,6 +51,15 @@ async def chat(
             except Exception:
                 pass
 
+        # Load earlier turns before persisting the current question so the
+        # model can understand short follow-ups such as "what if they refuse?".
+        history = []
+        if user_id and session_id:
+            try:
+                history = fetch_session_messages(session_id, user_id, limit=100)
+            except Exception:
+                history = []
+
         # Save user message
         if user_id and session_id:
             try:
@@ -64,7 +73,7 @@ async def chat(
                 pass
 
         # Get RAG response
-        result = await rag.chat(request.user_query)
+        result = await rag.chat(request.user_query, history=history)
 
         # Save assistant response
         if user_id and session_id:

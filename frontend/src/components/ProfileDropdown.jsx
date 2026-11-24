@@ -83,7 +83,7 @@ export default function ProfileDropdown() {
         aria-label={isOpen ? 'Close profile menu' : 'Open profile menu'}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-white bg-linear-to-br from-blue-600 to-indigo-600 text-xs font-bold text-white shadow-sm ring-1 ring-slate-200 transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+        className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-white bg-linear-to-br from-blue-600 to-indigo-600 p-0 text-xs font-bold text-white shadow-sm ring-1 ring-slate-200 transition hover:scale-105 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
       >
         {getInitials(user?.name)}
       </button>

@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
-import { SidebarToggle } from '../components/WorkspaceLayout';
+import { SectionBackButton } from '../components/WorkspaceLayout';
 import ProfileDropdown from '../components/ProfileDropdown';
 
 const createMessageId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -215,7 +215,7 @@ const ChatPage = () => {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
-            <SidebarToggle />
+            <SectionBackButton />
             <span className="truncate font-semibold text-slate-700">AI Legal Chat</span>
           </div>
           <div className="ml-3">

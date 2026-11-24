@@ -13,6 +13,8 @@ services:
         value: documents
       - key: GROQ_API_KEY
         sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
       - key: GOOGLE_PLACES_API_KEY
         sync: false
       - key: SUPABASE_URL

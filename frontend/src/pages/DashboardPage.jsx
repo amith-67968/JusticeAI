@@ -139,7 +139,7 @@ const DashboardPage = () => {
       {/* Main column */}
       <div>
         <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/70 backdrop-blur-xl">
-          <div className="mx-auto flex h-18 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
+          <div className="flex h-16 w-full items-center justify-between gap-3 px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
             <SidebarToggle />
             <div className="ml-auto flex items-center gap-2">
               <ProfileDropdown />

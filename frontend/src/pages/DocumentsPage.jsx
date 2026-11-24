@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowDownWideNarrow,
-  ArrowLeft,
   CalendarDays,
   ChevronDown,
   ChevronUp,
@@ -23,7 +22,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
-import { SidebarToggle } from '../components/WorkspaceLayout';
+import { SectionBackButton } from '../components/WorkspaceLayout';
 import ProfileDropdown from '../components/ProfileDropdown';
 
 const IMAGE_TYPES = new Set(['png', 'jpg', 'jpeg', 'bmp', 'webp', 'tif', 'tiff']);
@@ -366,7 +365,7 @@ const DocumentsPage = () => {
       <div className="min-h-dvh">
         <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
-            <SidebarToggle />
+            <SectionBackButton />
             <span className="truncate font-semibold text-slate-700">Documents</span>
           </div>
           <div className="flex items-center gap-2">
@@ -376,16 +375,7 @@ const DocumentsPage = () => {
 
         <main className="mx-auto w-full max-w-7xl px-4 pb-10 pt-5 sm:px-7 sm:pt-7 lg:px-10">
           <div className="mb-5 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 items-start gap-3">
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                aria-label="Go back"
-                className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-slate-200 bg-white p-0 text-slate-500 shadow-sm transition hover:border-blue-200 hover:text-blue-700"
-              >
-                <ArrowLeft size={16} />
-              </button>
-              <div className="min-w-0">
+            <div className="min-w-0">
                 <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-blue-700/80">
                   Document management
                 </p>
@@ -400,7 +390,6 @@ const DocumentsPage = () => {
                 <p className="mt-1.5 max-w-2xl text-xs leading-relaxed text-slate-500 sm:text-[13px]">
                   Review, organize, preview, and download the legal documents in your library.
                 </p>
-              </div>
             </div>
             <button
               type="button"

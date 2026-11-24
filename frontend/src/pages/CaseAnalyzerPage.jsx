@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft,
   UploadCloud,
   FileText,
   Loader2,
@@ -15,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
-import { SidebarToggle } from '../components/WorkspaceLayout';
+import { SectionBackButton } from '../components/WorkspaceLayout';
 import ProfileDropdown from '../components/ProfileDropdown';
 
 const NON_LEGAL_FILE_ERROR =
@@ -126,7 +125,7 @@ const CaseAnalyzerPage = () => {
       <div className="min-h-dvh">
         <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-slate-200/70 bg-white/85 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
-            <SidebarToggle />
+            <SectionBackButton />
             <span className="truncate font-semibold text-slate-700">Case Analyzer</span>
           </div>
           <div className="flex items-center gap-2">
@@ -135,16 +134,8 @@ const CaseAnalyzerPage = () => {
         </header>
 
         <main className="mx-auto w-full max-w-7xl px-4 pb-10 pt-6 sm:px-7 sm:pt-8 lg:px-10">
-          <div className="mb-6 flex items-start gap-3.5 sm:mb-7">
-            <button
-              type="button"
-              onClick={() => navigate('/dashboard')}
-              aria-label="Back to dashboard"
-              className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-slate-200/80 bg-white text-slate-500 shadow-[0_2px_6px_rgba(15,23,42,0.04)] transition-all duration-200 hover:-translate-x-0.5 hover:border-blue-200 hover:text-blue-700"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <div className="min-w-0 pt-0.5">
+          <div className="mb-6 sm:mb-7">
+            <div className="min-w-0">
               <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-blue-700/80">
                 Document intelligence
               </p>
@@ -261,10 +252,22 @@ const CaseAnalyzerPage = () => {
               )}
 
               {error && (
-                <div className="mt-6 w-full rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-left text-sm text-red-700">
+                <div role="alert" aria-live="assertive" className="mt-5 w-full rounded-2xl border border-rose-200 bg-rose-50/90 p-4 text-left shadow-sm sm:p-5">
                   <div className="flex items-start gap-3">
-                    <AlertTriangle size={18} className="mt-0.5 shrink-0" />
-                    <span>{error}</span>
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white text-rose-600 shadow-sm ring-1 ring-rose-100">
+                      <AlertTriangle size={18} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-rose-900">We couldn’t analyze this file</p>
+                      <p className="mt-1 text-xs leading-relaxed text-rose-800">{error}</p>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="mt-3 rounded-lg border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 shadow-sm transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+                      >
+                        Choose another file
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
+  ArrowLeft,
   FileText,
   LayoutDashboard,
   Menu,
@@ -31,9 +32,23 @@ export function SidebarToggle({ className = '' }) {
       onClick={toggleSidebar}
       aria-label={expanded ? 'Collapse navigation' : 'Expand navigation'}
       aria-expanded={expanded}
-      className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-blue-700 ${className}`}
+      className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-slate-200 bg-white p-0 text-slate-600 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 ${className}`}
     >
       <Menu size={18} />
+    </button>
+  );
+}
+
+export function SectionBackButton({ className = '' }) {
+  const navigate = useNavigate();
+  return (
+    <button
+      type="button"
+      onClick={() => navigate('/dashboard')}
+      aria-label="Back to dashboard"
+      className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-linear-to-br from-white to-blue-50 p-0 text-blue-700 shadow-[0_2px_8px_rgba(37,99,235,0.08)] transition hover:-translate-x-0.5 hover:border-blue-200 hover:from-blue-50 hover:to-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 ${className}`}
+    >
+      <ArrowLeft size={18} />
     </button>
   );
 }
@@ -119,6 +134,8 @@ function Sidebar({ onNavigate }) {
 }
 
 export default function WorkspaceLayout() {
+  const location = useLocation();
+  const isFocusedSection = ['/chat', '/analyzer', '/documents'].includes(location.pathname);
   const [isCollapsed, setIsCollapsed] = useState(
     () => window.localStorage.getItem('justiceai-sidebar-collapsed') === 'true'
   );
@@ -140,12 +157,12 @@ export default function WorkspaceLayout() {
 
   return (
     <SidebarContext.Provider value={{ isCollapsed, isMobileOpen, toggleSidebar }}>
-      {!isCollapsed && (
+      {!isFocusedSection && !isCollapsed && (
         <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 lg:block">
           <Sidebar onNavigate={closeMobileSidebar} />
         </aside>
       )}
-      {isMobileOpen && (
+      {!isFocusedSection && isMobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <button
             type="button"
@@ -158,7 +175,7 @@ export default function WorkspaceLayout() {
           </aside>
         </div>
       )}
-      <div className={`min-h-dvh ${isCollapsed ? '' : 'lg:ml-64'}`}>
+      <div className={`min-h-dvh ${!isFocusedSection && !isCollapsed ? 'lg:ml-64' : ''}`}>
         <Outlet />
       </div>
     </SidebarContext.Provider>
