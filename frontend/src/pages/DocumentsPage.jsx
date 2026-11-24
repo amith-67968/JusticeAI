@@ -514,7 +514,7 @@ const DocumentsPage = () => {
             </AnimatePresence>
           </section>
 
-          <section aria-label="Document library" className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
+          <section aria-label="Document library" className="rounded-2xl border border-slate-200/80 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
             <div className="border-b border-slate-100 p-3.5 sm:p-4">
               <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -615,16 +615,16 @@ const DocumentsPage = () => {
               </div>
             ) : filteredDocs.length > 0 ? (
               <>
-                <div className="overflow-x-auto">
+                <div className="max-h-[65vh] overflow-auto overscroll-contain">
                   <table className="w-full min-w-[850px] border-collapse text-left">
                     <thead>
                       <tr className="border-b border-slate-100 bg-slate-50/80 text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-500">
-                        <th scope="col" className="px-4 py-3 sm:px-5">Document name</th>
-                        <th scope="col" className="px-3 py-3">Category</th>
-                        <th scope="col" className="px-3 py-3">Upload date</th>
-                        <th scope="col" className="px-3 py-3">File size</th>
-                        <th scope="col" className="px-3 py-3">Evidence strength</th>
-                        <th scope="col" className="px-4 py-3 text-right sm:px-5">Actions</th>
+                        <th scope="col" className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-4 py-3 sm:px-5">Document name</th>
+                        <th scope="col" className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-3 py-3">Category</th>
+                        <th scope="col" className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-3 py-3">Upload date</th>
+                        <th scope="col" className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-3 py-3">File size</th>
+                        <th scope="col" className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-3 py-3">Evidence strength</th>
+                        <th scope="col" className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-4 py-3 text-right sm:px-5">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
