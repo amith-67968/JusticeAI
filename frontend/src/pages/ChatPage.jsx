@@ -25,11 +25,12 @@ const buildAssistantMessage = (response) => {
       laws: response.relevant_laws || [],
       plan: response.next_steps || [],
       sources: response.sources || [],
+      generationFailed: Boolean(response.generation_failed),
       // Lawyer fields — populated asynchronously
       lawyers: [],
       linkedinUrl: '',
       caseTypes: [],
-      lawyersLoading: true,   // starts as loading
+      lawyersLoading: !response.generation_failed,
     },
   };
 };
@@ -191,8 +192,11 @@ const ChatPage = () => {
 
       setMessages((currentMessages) => [...currentMessages, assistantMsg]);
 
-      // Fire-and-forget: fetch lawyers asynchronously
-      fetchLawyers(assistantMsg.id, response);
+      // Only fetch recommendations after a generated answer supplies a
+      // meaningful case classification. A fallback has no such assessment.
+      if (!response.generation_failed) {
+        fetchLawyers(assistantMsg.id, response);
+      }
 
     } catch (err) {
       setMessages((currentMessages) => [

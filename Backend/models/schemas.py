@@ -22,6 +22,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
+    generation_failed: bool = False
     relevant_laws: list[str] = []
     explanation: str = ""
     why_applicable: str = ""

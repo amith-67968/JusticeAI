@@ -221,17 +221,15 @@ def _build_rule_based_fallback(
     # mislead users when the deployed LLM provider is unavailable.
     return {
         "answer": (
-            "I couldn’t generate a reliable legal response just now. "
-            "The available reference search is not enough to confirm which law applies, "
-            "so I won’t guess. Please try again shortly, and include your country/state and the key facts."
+            "The legal AI service is currently unavailable, so I couldn’t prepare a reliable answer. "
+            "The deployment administrator needs to check the Groq API key and model configuration. "
+            "No legal conclusion has been generated; please try again after the service is restored."
         ),
+        "generation_failed": True,
         "relevant_laws": [],
-        "explanation": "No legal explanation was generated. Retrieved keyword matches are not shown as applicable law unless the assistant can verify their relevance.",
-        "why_applicable": "The legal generation service did not return a response, so no law has been assessed against your facts.",
-        "next_steps": [
-            "Keep relevant documents, messages, dates, and case details together.",
-            "For urgent or case-specific advice, consult a qualified lawyer in your jurisdiction.",
-        ],
+        "explanation": "",
+        "why_applicable": "",
+        "next_steps": [],
         "sources": [],
     }
 
