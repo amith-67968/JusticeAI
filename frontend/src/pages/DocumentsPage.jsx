@@ -105,7 +105,7 @@ const getErrorMessage = (err, fallback) =>
 
 const DocumentsPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, migrationNotice } = useAuth();
   const [typeFilter, setTypeFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [strengthFilter, setStrengthFilter] = useState('All');
@@ -374,6 +374,11 @@ const DocumentsPage = () => {
         </header>
 
         <main className="mx-auto w-full max-w-7xl px-4 pb-10 pt-5 sm:px-7 sm:pt-7 lg:px-10">
+          {migrationNotice && (
+            <div role="status" className="mb-5 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+              {migrationNotice}
+            </div>
+          )}
           <div className="mb-5 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
                 <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-blue-700/80">

@@ -4,8 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import WorkspaceLayout from './WorkspaceLayout';
 
 const ProtectedRoute = () => {
-  const { user, logoutRedirectTo } = useAuth();
+  const { user, loading, logoutRedirectTo } = useAuth();
   const location = useLocation();
+
+  if (loading) {
+    return <div className="grid min-h-dvh place-items-center text-sm text-slate-500">Restoring your secure session…</div>;
+  }
 
   if (!user) {
     if (logoutRedirectTo) {
@@ -19,3 +23,4 @@ const ProtectedRoute = () => {
 };
 
 export default ProtectedRoute;
+

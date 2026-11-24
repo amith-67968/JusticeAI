@@ -217,8 +217,13 @@ This repo includes `frontend/vercel.json` so React Router routes work correctly 
 3. Use the Vite defaults:
    - Build Command: `npm run build`
    - Output Directory: `dist`
-4. Add the environment variable `VITE_API_BASE_URL=https://your-render-service.onrender.com`.
+4. Add these environment variables, using the same Supabase project as the backend:
+   - `VITE_API_BASE_URL=https://your-render-service.onrender.com`
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY` (the public anon/publishable key, never the service-role key)
 5. Deploy the frontend.
+
+For local development, copy `frontend/.env.example` to `frontend/.env` and set the same Supabase URL and public key. Add both local and deployed `/login` URLs to the Supabase Auth redirect URL allowlist. Set `ENABLE_LOCAL_DATA_MIGRATION=true` only in the local backend `.env`; it stays disabled on Render. Existing local demo accounts are migrated from the local backend into Supabase when their matching email signs in on localhost; the migrated account can then access the same documents on the deployed site.
 
 ### Backend on Render
 

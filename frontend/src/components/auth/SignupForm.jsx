@@ -27,7 +27,7 @@ const SignupForm = () => {
       await signup(name, email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err);
+      setError(err instanceof Error ? err.message : 'Sign up failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

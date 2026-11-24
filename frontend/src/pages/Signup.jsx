@@ -12,6 +12,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const { signup, loading } = useAuth();
   const navigate = useNavigate();
@@ -29,7 +30,11 @@ export default function Signup() {
     }
 
     try {
-      await signup(name, email, password);
+      const result = await signup(name, email, password);
+      if (result.needsEmailConfirmation) {
+        setSuccessMessage('Check your email to confirm your account, then log in from either this site or the deployed app.');
+        return;
+      }
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Signup failed.');
@@ -82,7 +87,7 @@ export default function Signup() {
           </span>
           <h2 className="mt-5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Create your account</h2>
           <p className="mt-2 text-sm text-slate-600">
-            Start with a local demo account and continue into the dashboard.
+            Sign in securely from any device and keep your documents in sync.
           </p>
         </motion.div>
 
@@ -94,6 +99,16 @@ export default function Signup() {
               className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"
             >
               {error}
+            </motion.div>
+          )}
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              role="status"
+              className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+            >
+              {successMessage}
             </motion.div>
           )}
 

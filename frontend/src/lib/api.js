@@ -1,3 +1,5 @@
+import { supabase } from './supabase';
+
 const normalizeBaseUrl = (value) => value.replace(/\/$/, '');
 
 const shouldUseDevProxy = (configuredBaseUrl) => {
@@ -61,6 +63,12 @@ const parseResponse = async (response) => {
 
 const request = async (path, { method = 'GET', body, headers, user } = {}) => {
   const requestHeaders = buildHeaders(headers, user);
+  if (supabase && !requestHeaders.has('Authorization')) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) {
+      requestHeaders.set('Authorization', `Bearer ${session.access_token}`);
+    }
+  }
   const isFormData = body instanceof FormData;
 
   if (body && !isFormData && !requestHeaders.has('Content-Type')) {
@@ -112,6 +120,13 @@ export const api = {
     request(`/documents/${documentId}`, { method: 'DELETE', user }),
   recommendLawyers: (user, payload) =>
     request('/lawyers/recommend', { method: 'POST', body: payload, user }),
+  migrateLegacyDocuments: (legacyUserId, accessToken) =>
+    request('/documents/migrate-local', {
+      method: 'POST',
+      body: { legacy_user_id: legacyUserId },
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }),
 };
 
 export { ApiError };
+

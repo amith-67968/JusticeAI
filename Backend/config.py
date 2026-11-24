@@ -47,6 +47,9 @@ class Settings:
     HOST: str = os.getenv("HOST", "0.0.0.0")
     PORT: int = int(os.getenv("PORT", "8000"))
     DEBUG: bool = os.getenv("DEBUG", "true").lower() in ("true", "1", "yes")
+    ENABLE_LOCAL_DATA_MIGRATION: bool = os.getenv(
+        "ENABLE_LOCAL_DATA_MIGRATION", "false"
+    ).lower() in ("true", "1", "yes")
 
     # ── Supabase ─────────────────────────────────────────────────────────
     SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")

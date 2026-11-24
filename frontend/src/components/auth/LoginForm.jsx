@@ -20,7 +20,7 @@ const LoginForm = ({ onSwitch }) => {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err);
+      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

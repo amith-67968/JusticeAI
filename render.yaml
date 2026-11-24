@@ -9,6 +9,8 @@ services:
     envVars:
       - key: DEBUG
         value: false
+      - key: ENABLE_LOCAL_DATA_MIGRATION
+        value: false
       - key: SUPABASE_DOCUMENTS_TABLE
         value: documents
       - key: GROQ_API_KEY
