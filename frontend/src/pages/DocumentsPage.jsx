@@ -13,12 +13,8 @@ import {
   Filter,
   FolderOpen,
   HardDrive,
-  LayoutDashboard,
-  MessageSquare,
-  Plus,
   Search,
   ShieldCheck,
-  Scale,
   Trash2,
   UploadCloud,
   X,
@@ -27,15 +23,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
+import { SidebarToggle } from '../components/WorkspaceLayout';
+import ProfileDropdown from '../components/ProfileDropdown';
 
 const IMAGE_TYPES = new Set(['png', 'jpg', 'jpeg', 'bmp', 'webp', 'tif', 'tiff']);
-
-const NAV_ITEMS = [
-  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { label: 'AI Legal Chat', path: '/chat', icon: MessageSquare },
-  { label: 'Case Analyzer', path: '/analyzer', icon: UploadCloud },
-  { label: 'Documents', path: '/documents', icon: FileText },
-];
 
 const formatBytes = (bytes = 0) => {
   if (!bytes) {
@@ -112,82 +103,6 @@ const buildSummary = (document) => {
 
 const getErrorMessage = (err, fallback) =>
   err instanceof Error ? err.message : fallback;
-
-const DocumentsSidebar = ({ user, navigate }) => (
-  <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200/80 bg-white/95 px-4 py-5 shadow-[8px_0_30px_rgba(15,23,42,0.025)] backdrop-blur-xl lg:flex">
-    <button
-      type="button"
-      onClick={() => navigate('/dashboard')}
-      className="mb-8 flex items-center gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-slate-50"
-    >
-      <span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-linear-to-br from-white to-blue-50 text-blue-700 shadow-sm">
-        <Scale size={20} strokeWidth={1.8} />
-      </span>
-      <span>
-        <span className="block text-[15px] font-bold tracking-[-0.03em] text-slate-900">
-          Justice<span className="text-blue-700">AI</span>
-        </span>
-        <span className="block text-[9px] font-medium uppercase tracking-[0.12em] text-slate-400">
-          Legal intelligence
-        </span>
-      </span>
-    </button>
-
-    <p className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-      Workspace
-    </p>
-    <nav aria-label="Main navigation" className="space-y-1">
-      {NAV_ITEMS.map(({ label, path, icon: Icon }) => {
-        const active = path === '/documents';
-        return (
-          <button
-            key={path}
-            type="button"
-            onClick={() => navigate(path)}
-            aria-current={active ? 'page' : undefined}
-            className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-all ${
-              active
-                ? 'border-blue-100/80 bg-blue-50/80 text-blue-700 shadow-[0_2px_8px_rgba(37,99,235,0.06)]'
-                : 'border-transparent text-slate-500 hover:border-slate-100 hover:bg-slate-50 hover:text-slate-900'
-            }`}
-          >
-            {React.createElement(Icon, {
-              size: 16,
-              className: active ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600',
-            })}
-            {label}
-            {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-600" />}
-          </button>
-        );
-      })}
-    </nav>
-
-    <div className="mt-auto">
-      <div className="mb-3 rounded-xl border border-blue-100/80 bg-linear-to-br from-blue-50/90 to-white p-3.5 shadow-[0_3px_12px_rgba(37,99,235,0.04)]">
-        <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-slate-700">
-          <span className="grid h-6 w-6 place-items-center rounded-lg bg-white text-blue-600 shadow-sm">
-            <ShieldCheck size={12} />
-          </span>
-          Your files stay private
-        </div>
-        <p className="text-[9px] leading-relaxed text-slate-500">
-          Documents are processed for your analysis and never used to train public models.
-        </p>
-      </div>
-      <div className="flex items-center gap-2.5 border-t border-slate-100 pt-3">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-linear-to-br from-blue-600 to-indigo-600 text-xs font-semibold text-white shadow-sm">
-          {user?.name?.slice(0, 1).toUpperCase() || 'J'}
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[11px] font-semibold text-slate-800">
-            {user?.name || 'JusticeAI User'}
-          </span>
-          <span className="block truncate text-[9px] text-slate-400">{user?.email || ' '}</span>
-        </span>
-      </div>
-    </div>
-  </aside>
-);
 
 const DocumentsPage = () => {
   const navigate = useNavigate();
@@ -448,43 +363,16 @@ const DocumentsPage = () => {
 
   return (
     <div className="min-h-dvh bg-slate-50 text-slate-900">
-      <DocumentsSidebar user={user} navigate={navigate} />
-
-      <div className="min-h-dvh lg:pl-64">
+      <div className="min-h-dvh">
         <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
-            <span className="font-medium text-slate-400">Workspace</span>
-            <span className="text-slate-300">/</span>
+            <SidebarToggle />
             <span className="truncate font-semibold text-slate-700">Documents</span>
           </div>
-          <button
-            type="button"
-            onClick={() => navigate('/analyzer')}
-            className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-[10px] font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:px-4 sm:text-[11px]"
-          >
-            <Plus size={14} />
-            <span>New Analysis</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <ProfileDropdown />
+          </div>
         </header>
-
-        <nav aria-label="Mobile navigation" className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white px-3 py-2 lg:hidden">
-          {NAV_ITEMS.map(({ label, path, icon: Icon }) => (
-            <button
-              key={path}
-              type="button"
-              onClick={() => navigate(path)}
-              aria-current={path === '/documents' ? 'page' : undefined}
-              className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs ${
-                path === '/documents'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              {React.createElement(Icon, { size: 15 })}
-              {label}
-            </button>
-          ))}
-        </nav>
 
         <main className="mx-auto w-full max-w-7xl px-4 pb-10 pt-5 sm:px-7 sm:pt-7 lg:px-10">
           <div className="mb-5 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">

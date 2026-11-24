@@ -1,6 +1,7 @@
 import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import WorkspaceLayout from './WorkspaceLayout';
 
 const ProtectedRoute = () => {
   const { user, logoutRedirectTo } = useAuth();
@@ -14,7 +15,7 @@ const ProtectedRoute = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <Outlet />;
+  return <WorkspaceLayout />;
 };
 
 export default ProtectedRoute;

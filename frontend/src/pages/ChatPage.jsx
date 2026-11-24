@@ -1,28 +1,18 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft,
-  FileText,
-  LayoutDashboard,
-  MessageSquare,
   Scale,
   Send,
   ShieldCheck,
-  UploadCloud,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ChatMessage from '../components/ChatMessage';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
+import { SidebarToggle } from '../components/WorkspaceLayout';
+import ProfileDropdown from '../components/ProfileDropdown';
 
 const createMessageId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-const NAV_ITEMS = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'AI Legal Chat', path: '/chat', icon: MessageSquare },
-  { name: 'Case Analyzer', path: '/analyzer', icon: UploadCloud },
-  { name: 'Documents', path: '/documents', icon: FileText },
-];
 
 const buildAssistantMessage = (response) => {
   return {
@@ -43,14 +33,6 @@ const buildAssistantMessage = (response) => {
     },
   };
 };
-
-const getUserInitials = (name = '') =>
-  name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join('') || 'JA';
 
 // ── Geolocation helper ─────────────────────────────────────────────────
 
@@ -230,118 +212,16 @@ const ChatPage = () => {
 
   return (
     <div className="flex h-dvh min-h-dvh overflow-hidden bg-[#f8f9ff] text-slate-900">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200/80 bg-white/95 px-4 py-5 shadow-[8px_0_30px_rgba(15,23,42,0.025)] backdrop-blur-xl lg:flex">
-        <button
-          type="button"
-          onClick={() => navigate('/dashboard')}
-          className="mb-8 flex items-center gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-slate-50"
-        >
-          <span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-linear-to-br from-white to-blue-50 text-blue-700 shadow-sm">
-            <Scale size={20} strokeWidth={1.8} />
-          </span>
-          <span>
-            <span className="block text-[15px] font-bold tracking-[-0.03em] text-slate-900">
-              Justice<span className="text-blue-700">AI</span>
-            </span>
-            <span className="block text-[9px] font-medium uppercase tracking-[0.12em] text-slate-400">
-              Legal intelligence
-            </span>
-          </span>
-        </button>
-
-        <p className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-          Workspace
-        </p>
-        <nav aria-label="Main navigation" className="space-y-1">
-          {NAV_ITEMS.map(({ name, path, icon: Icon }) => {
-            const active = path === '/chat';
-            return (
-              <button
-                key={path}
-                type="button"
-                onClick={() => navigate(path)}
-                aria-current={active ? 'page' : undefined}
-                className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-all ${
-                  active
-                    ? 'border-blue-100/80 bg-blue-50/80 text-blue-700 shadow-[0_2px_8px_rgba(37,99,235,0.06)]'
-                    : 'border-transparent text-slate-500 hover:border-slate-100 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                {React.createElement(Icon, {
-                  size: 16,
-                  className: active ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600',
-                })}
-                {name}
-                {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-600" />}
-              </button>
-            );
-          })}
-        </nav>
-
-        <div className="mt-auto">
-          <div className="mb-3 rounded-xl border border-blue-100/80 bg-linear-to-br from-blue-50/90 to-white p-3.5 shadow-[0_3px_12px_rgba(37,99,235,0.04)]">
-            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-slate-700">
-              <span className="grid h-6 w-6 place-items-center rounded-lg bg-white text-blue-600 shadow-sm">
-                <ShieldCheck size={12} />
-              </span>
-              Your files stay private
-            </div>
-            <p className="text-[9px] leading-relaxed text-slate-500">
-              Documents are processed for your analysis and never used to train public models.
-            </p>
-          </div>
-          <div className="flex items-center gap-2.5 border-t border-slate-100 pt-3">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-linear-to-br from-blue-600 to-indigo-600 text-[10px] font-semibold text-white shadow-sm">
-              {getUserInitials(user?.name)}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-[11px] font-semibold text-slate-800">
-                {user?.name || 'JusticeAI User'}
-              </span>
-              <span className="block truncate text-[9px] text-slate-400">{user?.email || ' '}</span>
-            </span>
-          </div>
-        </div>
-      </aside>
-
-      <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
-            <button
-              type="button"
-              onClick={() => navigate('/dashboard')}
-              aria-label="Back to dashboard"
-              className="mr-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-blue-700"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <span className="font-medium text-slate-400">Workspace</span>
-            <span className="text-slate-300">/</span>
+            <SidebarToggle />
             <span className="truncate font-semibold text-slate-700">AI Legal Chat</span>
           </div>
-          <span className="ml-3 grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-white bg-linear-to-br from-blue-600 to-indigo-600 text-[10px] font-bold text-white shadow-sm ring-1 ring-slate-200">
-            {getUserInitials(user?.name).slice(0, 1)}
-          </span>
+          <div className="ml-3">
+            <ProfileDropdown />
+          </div>
         </header>
-
-        <nav aria-label="Mobile navigation" className="flex shrink-0 gap-1 overflow-x-auto border-b border-slate-200/80 bg-white px-3 py-2 lg:hidden">
-          {NAV_ITEMS.map(({ name, path, icon: Icon }) => (
-            <button
-              key={path}
-              type="button"
-              onClick={() => navigate(path)}
-              aria-current={path === '/chat' ? 'page' : undefined}
-              className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs ${
-                path === '/chat'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              {React.createElement(Icon, { size: 15 })}
-              {name}
-            </button>
-          ))}
-        </nav>
 
         <section className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto">

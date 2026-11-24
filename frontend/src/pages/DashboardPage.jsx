@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence, animate, motion, useInView } from 'framer-motion';
+import { animate, motion, useInView } from 'framer-motion';
 import {
   ArrowRight,
   BarChart3,
@@ -8,25 +8,15 @@ import {
   Clock,
   FileText,
   Gavel,
-  LayoutDashboard,
-  LogOut,
-  Menu,
   MessageSquare,
   Scale,
-  ShieldCheck,
   Sparkles,
   UploadCloud,
-  X,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
-
-const NAV_ITEMS = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'AI Legal Chat', path: '/chat', icon: MessageSquare },
-  { name: 'Case Analyzer', path: '/analyzer', icon: UploadCloud },
-  { name: 'Documents', path: '/documents', icon: FileText },
-];
+import { SidebarToggle } from '../components/WorkspaceLayout';
+import ProfileDropdown from '../components/ProfileDropdown';
 
 const CAPABILITY_STATS = [
   { label: 'Case categories', value: 5, suffix: '', icon: BarChart3, tone: 'text-violet-600 bg-violet-50' },
@@ -90,14 +80,6 @@ const getGreeting = () => {
   return 'Good evening';
 };
 
-const getInitials = (name = '') =>
-  name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join('') || 'JA';
-
 function CountUp({ to, suffix = '' }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
@@ -121,98 +103,9 @@ function CountUp({ to, suffix = '' }) {
   );
 }
 
-function Sidebar({ currentPath, onNavigate, onClose, isMobile = false }) {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  return (
-    <div className="flex h-full flex-col gap-6 p-5">
-      <div className="flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl border border-blue-200 bg-white shadow-sm">
-          <Scale className="text-accent-primary" size={22} />
-        </span>
-        <div>
-          <p className="text-base font-bold tracking-tight text-slate-900">JusticeAI</p>
-          <p className="text-xs font-medium text-slate-500">Legal intelligence</p>
-        </div>
-        {isMobile && (
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close navigation"
-            className="ml-auto grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500"
-          >
-            <X size={18} />
-          </button>
-        )}
-      </div>
-
-      <nav className="flex flex-1 flex-col gap-1.5">
-        {NAV_ITEMS.map((item) => {
-          const Icon = item.icon;
-          const isActive = currentPath === item.path;
-          return (
-            <button
-              key={item.path}
-              type="button"
-              onClick={() => onNavigate(item.path)}
-              className={`relative flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-colors duration-200 ${
-                isActive ? 'text-accent-primary' : 'text-slate-500 hover:bg-white/70 hover:text-slate-900'
-              }`}
-            >
-              {isActive && (
-                <motion.span
-                  layoutId="sidebar-active"
-                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  className="absolute inset-0 rounded-2xl border border-blue-100 bg-blue-50/90"
-                />
-              )}
-              <Icon className="relative z-10" size={19} />
-              <span className="relative z-10">{item.name}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-violet-50 p-4">
-        <div className="animate-drift-a pointer-events-none absolute -top-8 -right-6 h-24 w-24 rounded-full bg-blue-300/40 blur-2xl" />
-        <div className="relative">
-          <ShieldCheck className="text-accent-primary" size={20} />
-          <p className="mt-3 text-sm font-semibold text-slate-900">Your files stay private</p>
-          <p className="mt-1 text-xs leading-relaxed text-slate-600">
-            Documents are processed for your analysis and never used to train public models.
-          </p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 p-3">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-accent-primary to-violet-500 text-sm font-bold text-white">
-          {getInitials(user?.name)}
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-slate-900">{user?.name || 'Guest'}</p>
-          <p className="truncate text-xs text-slate-500">{user?.email || 'Not signed in'}</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => {
-            logout();
-            navigate('/', { replace: true });
-          }}
-          aria-label="Log out"
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
-        >
-          <LogOut size={17} />
-        </button>
-      </div>
-    </div>
-  );
-}
-
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [documentCount, setDocumentCount] = useState(null);
 
   useEffect(() => {
@@ -243,66 +136,13 @@ const DashboardPage = () => {
         <div className="animate-drift-b absolute top-1/3 -right-28 h-120 w-120 rounded-full bg-violet-200/35 blur-3xl" />
       </div>
 
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-slate-200/70 bg-white/65 backdrop-blur-xl lg:block">
-        <Sidebar currentPath="/dashboard" onNavigate={(path) => navigate(path)} />
-      </aside>
-
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="absolute inset-0 bg-slate-900/25 backdrop-blur-sm"
-            />
-            <motion.aside
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="absolute inset-y-0 left-0 w-72 border-r border-slate-200/70 bg-white"
-            >
-              <Sidebar
-                currentPath="/dashboard"
-                isMobile
-                onClose={() => setIsMenuOpen(false)}
-                onNavigate={(path) => {
-                  setIsMenuOpen(false);
-                  navigate(path);
-                }}
-              />
-            </motion.aside>
-          </div>
-        )}
-      </AnimatePresence>
-
       {/* Main column */}
-      <div className="lg:pl-72">
+      <div>
         <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/70 backdrop-blur-xl">
           <div className="mx-auto flex h-18 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen(true)}
-              aria-label="Open navigation"
-              className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 lg:hidden"
-            >
-              <Menu size={20} />
-            </button>`r`n            <div className="ml-auto flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => navigate('/analyzer')}
-                className="btn-primary hidden items-center gap-2 px-5 py-2.5 text-sm shadow-md shadow-blue-600/15 sm:inline-flex"
-              >
-                <UploadCloud size={16} />
-                New analysis
-              </button>
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-accent-primary to-violet-500 text-sm font-bold text-white shadow-sm">
-                {getInitials(user?.name)}
-              </span>
+            <SidebarToggle />
+            <div className="ml-auto flex items-center gap-2">
+              <ProfileDropdown />
             </div>
           </div>
         </header>

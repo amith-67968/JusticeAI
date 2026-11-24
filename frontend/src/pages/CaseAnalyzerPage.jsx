@@ -9,15 +9,14 @@ import {
   ShieldCheck,
   FileSearch,
   AlertTriangle,
-  Scale,
-  LayoutDashboard,
-  MessageSquare,
   LockKeyhole,
   Sparkles,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
+import { SidebarToggle } from '../components/WorkspaceLayout';
+import ProfileDropdown from '../components/ProfileDropdown';
 
 const NON_LEGAL_FILE_ERROR =
   'This file does not appear to be related to law. Please upload a legal or law-related document to continue.';
@@ -124,103 +123,14 @@ const CaseAnalyzerPage = () => {
 
   return (
     <div className="min-h-dvh bg-[radial-gradient(ellipse_at_top_right,_rgba(219,234,254,0.42),_transparent_34%),#f7f9fc] text-slate-900">
-      <motion.aside
-        initial={{ x: -12, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200/80 bg-white/95 px-4 py-5 shadow-[8px_0_30px_rgba(15,23,42,0.025)] backdrop-blur-xl lg:flex"
-      >
-        <button
-          type="button"
-          onClick={() => navigate('/dashboard')}
-          className="group mb-8 flex items-center gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-slate-50"
-        >
-          <span className="relative grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-linear-to-br from-white to-blue-50 text-blue-700 shadow-sm transition-transform duration-200 group-hover:scale-105">
-            <Scale size={20} strokeWidth={1.8} />
-            <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500" />
-          </span>
-          <span>
-            <span className="block text-[15px] font-bold tracking-[-0.03em] text-slate-900">Justice<span className="text-blue-700">AI</span></span>
-            <span className="block text-[9px] font-medium uppercase tracking-[0.12em] text-slate-400">Legal intelligence</span>
-          </span>
-        </button>
-
-        <div className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-          Workspace
-        </div>
-        <nav aria-label="Main navigation" className="space-y-1">
-          {[
-            { label: 'Dashboard', icon: <LayoutDashboard size={16} />, path: '/dashboard' },
-            { label: 'AI Legal Chat', icon: <MessageSquare size={16} />, path: '/chat' },
-            { label: 'Case Analyzer', icon: <UploadCloud size={16} />, path: '/analyzer', active: true },
-            { label: 'Documents', icon: <FileText size={16} />, path: '/documents' },
-          ].map(({ label, icon, path, active }) => (
-            <button
-              key={path}
-              type="button"
-              onClick={() => navigate(path)}
-              aria-current={active ? 'page' : undefined}
-              className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-all duration-200 ${
-                active
-                  ? 'border-blue-100/80 bg-blue-50/80 text-blue-700 shadow-[0_2px_8px_rgba(37,99,235,0.06)]'
-                  : 'border-transparent text-slate-500 hover:border-slate-100 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <span className={active ? 'text-blue-600' : 'text-slate-400 transition-colors group-hover:text-slate-600'}>
-                {icon}
-              </span>
-              {label}
-              {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-600" />}
-            </button>
-          ))}
-        </nav>
-
-        <div className="mt-auto">
-          <div className="mb-3 rounded-xl border border-blue-100/80 bg-linear-to-br from-blue-50/90 to-white p-3.5 shadow-[0_3px_12px_rgba(37,99,235,0.04)]">
-            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-slate-700">
-              <span className="grid h-6 w-6 place-items-center rounded-lg bg-white text-blue-600 shadow-sm">
-                <LockKeyhole size={12} />
-              </span>
-              Your files stay private
-            </div>
-            <p className="text-[9px] leading-relaxed text-slate-500">
-              Documents are processed for your analysis and never used to train public models.
-            </p>
-          </div>
-          <div className="flex items-center gap-2.5 border-t border-slate-100 pt-3">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-linear-to-br from-blue-600 to-indigo-600 text-xs font-semibold text-white shadow-sm">
-              {user?.name?.slice(0, 1).toUpperCase() || 'J'}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-[11px] font-semibold text-slate-800">
-                {user?.name || 'JusticeAI User'}
-              </span>
-              <span className="block truncate text-[9px] text-slate-400">{user?.email || ' '}</span>
-            </span>
-          </div>
-        </div>
-      </motion.aside>
-
-      <div className="min-h-dvh lg:pl-64">
+      <div className="min-h-dvh">
         <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-slate-200/70 bg-white/85 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-2 text-[10px] sm:text-[11px]">
-            <span className="font-medium text-slate-400">Workspace</span>
-            <span className="text-slate-300">/</span>
+            <SidebarToggle />
             <span className="truncate font-semibold text-slate-700">Case Analyzer</span>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={resetAnalyzer}
-              className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-[10px] font-semibold text-white shadow-[0_3px_10px_rgba(37,99,235,0.2)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_14px_rgba(37,99,235,0.24)] sm:px-4 sm:text-[11px]"
-            >
-              <UploadCloud size={13} />
-              <span className="hidden sm:inline">New Analysis</span>
-              <span className="sm:hidden">New</span>
-            </button>
-            <span className="grid h-8 w-8 place-items-center rounded-full border-2 border-white bg-linear-to-br from-blue-600 to-indigo-600 text-xs font-bold text-white shadow-sm ring-1 ring-slate-200">
-              {user?.name?.slice(0, 1).toUpperCase() || 'J'}
-            </span>
+            <ProfileDropdown />
           </div>
         </header>
 
